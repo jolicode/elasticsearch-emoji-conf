@@ -575,7 +575,7 @@ while (start != BreakIterator.DONE
         </section>
 
         <section>
-            <h2 class="no-caps">Le RuleStatus</h2>
+            <h2 class="no-caps">RBBI et RuleStatus</h2>
 
             <pre><code class="hljs java" data-trim>!!chain;
 $CR                 = [\p{Word_Break = CR}];
@@ -711,12 +711,8 @@ $dictionary $dictionary;
         </section>
 
 
-
-
-
-
         <section>
-            <h2 class="no-caps">Le RuleStatus</h2>
+            <h2 class="no-caps">RBBI et RuleStatus</h2>
 
             <pre><code class="hljs java" data-trim>!!forward;
 $CR $LF;
@@ -729,22 +725,263 @@ $E_Modifier ($Extend | $Format | $ZWJ)*;
         </section>
 
 
+        <section>
+            <h2 class="no-caps">ICUTokenizer rule_files</h2>
+
+            <ul>
+                <li>Fonctionnalité <a
+                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/5.0/analysis-icu-tokenizer.html">expérimentale
+                    dans icu_tokenizer</a></li>
+                <li>
+
+                    Possibilité de déclarer des fichiers de rules RBBI :
+
+                    <pre><code class="hljs java" data-trim>"tokenizer" : {
+    "icu_user_file" : {
+       "type" : "icu_tokenizer",
+       "rule_files" : "Latn:KeywordTokenizer.rbbi"
+    }
+}
+</code></pre>
+                </li>
+                <li class="fragment">❌ Ne remplis pas mon besoin car lié à une écriture, et écrase les régles pré-définis</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Notre propre plugin !</h2>
+
+            <h1>😮 😮 😮</h1>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Spécifications</h2>
+
+            <ul>
+                <li>La dernière version d'ICU</li>
+                <li>Tokenizer compatible <span class="emphasis">icu_tokenizer</span></li>
+                <li>Marquer les emoji avec le status {200}</li>
+                <li>Éventuellement embarquer les synonymes</li>
+                <li>Simplifier le support des emoji 👌</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Écrire un plugin</h2>
+
+            <ul>
+                <li>Documentation <a
+                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugin-authors.html">"Allez voir le code ici"</a>
+                    <ul>
+                        <li>Pas d'explication sur les bonnes pratiques
+                        <li>Comment builder ? Distribuer ?
+                        <li>Avec Elasticsearch 5, une release par version d'Elasticsearch
+                    </ul>
+
+                </li>
+                <li>Un effort en court pour aider à la réalisation de plugin Ingest</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Écrire un plugin</h2>
+
+            <ul>
+                <li>Build basé sur Gradle
+                <li>Il faut Gradle 2.13 uniquement !
+                <li>Plein de checks automatique
+                <li>Pas de documentation sur la configuration
+                <li>Zéro connaissance de l'écosystème Java 😯
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Quelques flags utile</h2>
+
+            <ul>
+                <li><code>licenseHeaders.enabled</code>
+                <li><code>checkstyleTest.enabled</code>
+                <li><code>dependencyLicenses.enabled</code>
+                <li><code>thirdPartyAudit.enabled</code>
+                <li><code>test.enabled</code>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Commandes Gradle</h2>
+
+            <ul>
+                <li><code>gradle idea</code> 💗 pour IntelliJ
+                <li><code>gradle tasks</code>
+                <li><code>gradle clean check</code> pour builder
+                <li><code>gradle clean check assemble</code> pour publier
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Gradle fait tout</h2>
+
+            <p>Le livrable final est fait automatiquement :</p>
+
+            <pre><code class="hljs text" data-trim>
+analysis-emoji-5.0.0.zip
+└── elasticsearch
+    ├── analysis-emoji-5.0.0.jar
+    ├── icu4j-58.1.jar
+    ├── lucene-analyzers-icu-6.2.0.jar
+    └── plugin-descriptor.properties</code></pre>
+
+            <pre><code class="hljs text" data-trim>
+description=Add support for emoji in Elasticsearch
+version=5.0.0
+name=analysis-emoji
+classname=org.elasticsearch.plugin.analysis.emoji.EmojiPlugin
+java.version=1.8
+elasticsearch.version=5.0.0
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Plugin simple</h2>
+
+            <p>Juste un TokenizerFactory, des tests et une configuration custom pour ICUTokenizer :</p>
+
+                <pre><code class="hljs java" data-trim>defaultRules = defaultRules.replace(
+    "!!forward;",
+    "!!forward;\n$EmojiNRK {200};"
+);
+
+
+defaultRules = defaultRules.replace(
+    "| $ZWJ)*;",
+    "| $ZWJ)* {200};"
+);
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Plein d'idées pour la suite</h2>
+
+            <ul>
+                <li>Le développement est ouvert sur Github</li>
+                <li><a href="https://github.com/jolicode/emoji-search">https://github.com/jolicode/emoji-search</a></li>
+                <li>Toute aide est la bienvenue 💘</li>
+                <li class="fragment">🆘 Vraiment, HELP ! 🆘</li>
+            </ul>
+        </section>
 
 
 
+        <section>
+            <h2 class="no-caps">Utilisation</h2>
+
+            <pre><code class="hljs java" data-trim>"analyzer": {
+   "english_with_emoji": {
+     "tokenizer": "emoji_tokenizer",
+     "filter": [
+       "lowercase",
+       "english_emoji"
+     ]
+   }
+ }</code></pre>
+        </section>
+        <section>
+            <h2 class="no-caps">Résultat</h2>
+
+            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
+{
+  "text": "I live in 🇫🇷 and I'm 👩‍🚀"
+}</code></pre>
+
+            <p>i live in 🇫🇷 france and i'm 👩‍🚀 astronaut rocket woman</p>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Gérer les emoticons</h2>
+
+
+            <blockquote>:-)&nbsp;&nbsp;&nbsp;&nbsp;:D&nbsp;&nbsp;&nbsp;&nbsp;:-(&nbsp;&nbsp;&nbsp;&nbsp;
+                ^_^&nbsp;&nbsp;&nbsp;&nbsp;;-)&nbsp;&nbsp;&nbsp;&nbsp;<3
+            </blockquote>
+
+            <p class="fragment">On va simplement mapper les emoticons vers leurs emoji respectifs avant la tokenisation !</p>
+        </section>
 
 
 
+        <section>
+            <h2 class="no-caps">Mapping emoticons</h2>
+
+            <pre><code class="hljs text" data-trim>
+:P=>😛
+8-)=>😎
+:s=>😒
+:|=>😐
+O:-D=>😇
+&lt;/3=>💔
+:'-|=>😢
+</code></pre>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Un nouveau char_filter</h2>
+
+            <pre><code class="hljs java" data-trim>"char_filter": {
+    "emoticons_char_filter": {
+      "type": "mapping",
+      "mappings_path": "analysis/emoticons.txt"
+    }
+},</code></pre>
+
+            <p>Fichier de mapping disponible : <a
+                    href="https://github.com/jolicode/emoji-search/blob/master/emoticons.txt">https://github.com/jolicode/emoji-search/blob/master/emoticons.txt</a></p>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Un nouveau char_filter</h2>
+
+            <pre><code class="hljs java" data-trim>"analyzer": {
+   "english_with_emoji": {
+     "char_filter": ["emoticons_char_filter"],
+     "tokenizer": "emoji_tokenizer",
+     "filter": [
+       "lowercase",
+       "english_emoji"
+     ]
+   }
+ }</code></pre>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Résultat</h2>
+
+            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
+{
+  "text": "Hi mom :)"
+}</code></pre>
+
+            <p>hi mom 😃 face mouth open smile</p>
+        </section>
 
 
 
+        <section>
+            <h2>Pour résumer</h2>
 
-
-
-
-
-
-
+            <ul>
+                <li>Les emoji sont des lettres comme les autres 🔠</li>
+                <li>Leur recherche se base sur des synonymes 👥</li>
+                <li>Le CLDR produit ses annotations pour nous 📝</li>
+                <li>Écrire un plugin Elasticsearch c'est dur 👷</li>
+                <li>Venez m'aider 🙏</li>
+            </ul>
+        </section>
 
 
         <section>
@@ -754,75 +991,23 @@ $E_Modifier ($Extend | $Format | $ZWJ)*;
                 🤘
             </p>
 
-            <div style="margin-top:100px">
-                <small>Supportez le Consortium Unicode, adoptez un caractère !</small>
-            </div>
-            <a href="http://unicode.org/consortium/adopt-a-character.html"><img style="margin-top: 0"
-                                                                                src="images/bronze-1F37B.png"
-                                                                                alt="JoliCode.com Emoji"></a>
+            <p>
+                <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a>
+                <br>
+                <a href="http://jolicode.com">
+                    <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"/>
+                </a>
+            </p>
         </section>
-
-        <section>
-            <h1>PHP 6 👋
-            </h1>
-        </section>
-
-        <section>
-            <h2 class="no-caps">PHP 6 et Unicode</h2>
-
-            <ul>
-                <li>Le Web est Unicode</li>
-                <li>PHP est le Web</li>
-                <li>PHP doit avoir Unicode !</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">PHP 6 et Unicode</h2>
-
-            <ul>
-                <li>Démarré en 2005</li>
-                <li>Ajout du support complet dans toute l'API</li>
-                <li>N'a jamais abouti faute de traction</li>
-                <li class="fragment">Mais on peut rêver !</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">PHP 6 et Unicode</h2>
-
-            <pre><code class="hljs php" data-trim>$string = "🍕🐘";
-echo $string[0];
-=> 🍕
-
-$string[1] = "🐍";
-echo $string;
-=> 🍕🐍
-
-echo strlen("🐘");
-=> 1
-            </code></pre>
-        </section>
-
-        <section>
-            <h2 class="no-caps">PHP 6 et Unicode</h2>
-
-            <pre><code class="hljs php" data-trim>class 🍣 implements 🍚, 🐟 {
-    $🍶 = true;
-    $⛔ = [
-        "🐱"
-    ];
-}</code></pre>
-
-            <p class="footnote">En vrai ça fonctionne déjà pour les classes</p>
-        </section>
-
 
         <section data-markdown>
             <script type="text/template">
-                ## Sources / Crédits
+                ## Ressources
 
-                - todo
+                - https://www.elastic.co/blog/writing-your-own-ingest-processor-for-elasticsearch
+                - http://david.pilato.fr/blog/2016/10/16/creating-a-plugin-for-elasticsearch-5-dot-0-using-maven-updated-for-ga/
+                - https://github.com/elastic/elasticsearch/tree/master/plugins/jvm-example
+                - https://twitter.com/damienalexandre 😂
             </script>
         </section>
 
