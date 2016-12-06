@@ -98,8 +98,6 @@
         </section>
 
         <section>
-            <h2 class="no-caps">Qu'est-ce qu'un emoji&nbsp;?</h2>
-
             <p>En 1998, un opérateur Japonais i-mode lance une collection de 172 pictogrammes de 12x12 pixels</p>
 
             <img src="images/i_mode.png" style="width: 20%;" alt="iMode">
@@ -112,8 +110,6 @@
         </section>
 
         <section>
-            <h2 class="no-caps">Qu'est-ce qu'un emoji&nbsp;?</h2>
-
             <ul>
                 <li>Chaque opérateur avait son propre set propriétaire - la guerre de la concurrence pour avoir les emoji les plus cool 😎</li>
                 <li>La transmission était sur 2 octets (en utilisant un range privé Unicode)</li>
@@ -125,16 +121,18 @@
                 </li>
             </ul>
         </section>
+        
+        <section>
+            <img src="images/unicode.PNG" alt="">
+        </section>
 
         <section>
-            <h2 class="no-caps">Qu'est-ce qu'un emoji&nbsp;?</h2>
-
             <ul>
-                <li>Standardisation dans Unicode version 6.0 en Octobre 2010
+                <li>Standardisation dans Unicode 6.0 en Octobre 2010
                 <li>855 emoji spécifiés, documentés et encodés par le Consortium Unicode
                     <ul>
                         <li>Avec mapping pour les emoji Japonais existants</li>
-                        <li>Tour de Tokyo 🗼 mais pas Tour Eiffel 😒</li>
+                        <li>Tour de Tokyo 🗼 mais pas Tour Eiffel</li>
                     </ul>
                 </li>
             </ul>
@@ -145,8 +143,6 @@
 
 
         <section>
-            <h2 class="no-caps">Qu'est-ce qu'un emoji&nbsp;?</h2>
-
             <ul>
                 <li>Support complet dans l'iPhone en 2011 📱
                 <li>Tout le monde a suivi et nous pouvons maintenant transmettre 🍕 depuis un téléphone Android en France vers un téléphone Chinois sans aucun problème !</li>
@@ -229,7 +225,7 @@
                     Pour chaque pays !
 
                     <ul>
-                        <li>🇨 U+1F1E8 et 🇦 U+1F1E6 donne 🇨🇦
+                        <li>🇨 U+1F1E8 et 🇦 U+1F1E6 donnent 🇨🇦
                         <li>🇫🇷 🇦🇪 🇸🇪
                     </ul>
                 </li>
@@ -290,11 +286,19 @@
             <h2 class="no-caps">Faire mieux que Twitter</h2>
 
             <ul>
-                <li>Unicode spécifie <a href="http://unicode.org/reports/tr51/#Searching">comment faire de la recherche</a>
-                <li>Chaque emoji doit être indexé avec ses annotations, et cela dans toutes les langues cibles :
+                <li>Unicode spécifie <a href="http://unicode.org/reports/tr51/#Searching">comment faire de la recherche</a> (TR51)
+                <li>Chaque emoji doit être indexé avec ses annotations, et cela dans toutes les langues cibles
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Faire mieux que Twitter</h2>
+
+            <ul>
+                <li>L'emoji 🎅 ça donne :
                     <ul>
-                        <li>Anglais : 🎅 => 🎅, celebration, christmas, santa</li>
-                        <li>Français : 🎅 => 🎅, père, noël</li>
+                        <li>Anglais : celebration, christmas, santa</li>
+                        <li>Français : père, noël</li>
                     </ul>
                 </li>
                 <li>Donc rechercher "santa" remonte les documents avec 🎅 et inversement.</li>
@@ -345,20 +349,6 @@
 
 
         <section>
-            <h2 class="no-caps">Pas de token 🎅 ?</h2>
-
-            <ul>
-                <li>Le <strong>standard</strong> tokenizer est basé sur <a
-                        href="http://www.unicode.org/reports/tr29/tr29-17.html">"Unicode Text Segmentation"</a>
-
-                    version 17, publié en 2010, sans support des Emoji
-                <li>Un emoji est donc considéré comme un caractère à ignorer au même titre que la ponctuation</li>
-            </ul>
-
-            <p>😖</p>
-        </section>
-
-        <section>
             <pre><code class="hljs json" data-trim>
 /_analyze?tokenizer=standard&text=I love &#x1F355;
 
@@ -378,6 +368,22 @@
 
             <p class="fragment">Mes synonymes ne seront jamais ajoutés 😢</p>
         </section>
+
+
+        <section>
+            <h2 class="no-caps">Pas de token &#x1F355; ?</h2>
+
+            <ul>
+                <li>Le <strong>standard</strong> tokenizer est basé sur <a
+                        href="http://www.unicode.org/reports/tr29/tr29-17.html">"Unicode Text Segmentation"</a>
+
+                    version 17, publié en 2010, sans support des Emoji
+                <li>Un emoji est donc considéré comme un caractère à ignorer au même titre que la ponctuation</li>
+            </ul>
+
+            <p>😖</p>
+        </section>
+
 
         <section>
             <h2 class="no-caps">Le whitespace tokenizer</h2>
@@ -531,7 +537,7 @@ GET /en-emoji/_analyze?analyzer=english_with_emoji
                         <li>Nous sommes actuellement à la version <span class="emphasis">58.1</span>
                     </ul>
                 </li>
-                <li>Le ICUTokenizer de Lucene marque quand même les Emoji comme des non mots
+                <li>Le ICUTokenizer de Lucene marque quand même les Emoji comme des "non mots"
             </ul>
         </section>
 
@@ -722,6 +728,8 @@ $ALetterEx {200};
 $E_Base ($Extend | $Format | $ZWJ)*;
 $E_Modifier ($Extend | $Format | $ZWJ)*;
 </code></pre>
+
+            <p>Pas de "status" pour les Emoji</p>
         </section>
 
 
