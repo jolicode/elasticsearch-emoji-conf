@@ -7,9 +7,9 @@
     pizza = &#x1F355;
     -->
 
-    <title>Comment indexer des Emoji avec Elasticsearch</title>
+    <title>The journey to get pizzas while looking for "🍕"</title>
 
-    <meta name="description" content="Comment indexer des Emoji avec Elasticsearch ">
+    <meta name="description" content="The journey to get pizzas while looking for 🍕">
     <meta name="author" content="JoliCode">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,6 +20,18 @@
 
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/jolicode.css" id="theme">
+
+    <style>
+        .reveal em {
+            display: inline-block;
+            background-color: #f7d325;
+            padding: 8px 12px;
+            font-style: normal;
+            color:black;
+            border: 2px solid gray;
+            border-radius: 10px;
+        }
+    </style>
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -48,9 +60,9 @@
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
         <section>
-            <h2>Comment indexer des Emoji avec Elasticsearch</h2>
+            <h2>The journey to get pizzas while looking for 🍕</h2>
 
-            <h4>Ou chercher &#x1F355; pour trouver des pizzas !</h4>
+            <h4>A story about emoji and Elasticsearch</h4>
         </section>
 
         <section data-state="jolistate">
@@ -73,50 +85,69 @@
                 </a>
             </p>
 
-            <h2>Conseil, r&eacute;alisation, audit, expertise et formation</h2>
+            <h2>Development, consulting, audit and training</h2>
+            <h4>In Lausanne 🇨🇭 and Paris 🇫🇷</h4>
 
             <p class="footnote">
-                &hellip;Poney, Guinness et gif anim&eacute;.
+                &hellip;Poney, Guinness and animated gif.
             </p>
         </section>
 
         <section>
-            <h2 class="no-caps">Qu'est-ce qu'un emoji&nbsp;?</h2>
+            <h2 class="no-caps">What's emoji?</h2>
 
             <ul>
-                <li>Depuis l'invention
-                    <del>de l'écriture</del>
-                    du SMS, nous utilisons des emoticons pour transmettre des émotions !
+                <li>Since the beginning of writing, text is used to convey emotions</li>
+                <li>Sometime text is too long so emoticons were introduced
+                    <ul>
+                        <li><em>:-)</em> for happy</li>
+                        <li><em>:'(</em> for sad</li>
+                    </ul>
                 </li>
-                <li>Abraham Lincoln en 1862 : "(applause and laughter ;)"</li>
-                <li>Scott Fahlman est le premier, en 1982 avec les emoticons :-) et :-(</li>
+                <li>SMS on mobile phone increased this need 📱</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">The first emoticon</h2>
+            <ul>
+                <li>Abraham Lincoln in 1862: <em>"(applause and laughter ;)"</em></li>
+                <li>Scott Fahlman in 1982 with <em>:-)</em> and <em>:-(</em></li>
             </ul>
 
-            <blockquote>:-)&nbsp;&nbsp;&nbsp;&nbsp;:D&nbsp;&nbsp;&nbsp;&nbsp;:-(&nbsp;&nbsp;&nbsp;&nbsp;
-                ^_^&nbsp;&nbsp;&nbsp;&nbsp;;-)&nbsp;&nbsp;&nbsp;&nbsp;<3
+            <blockquote>
+                I propose that the following character sequence for joke markers:
+                <br><br>
+                :-)
             </blockquote>
         </section>
 
         <section>
-            <p>En 1998, un opérateur Japonais i-mode lance une collection de 172 pictogrammes de 12x12 pixels</p>
+            <h2 class="no-caps">Our phones evolved</h2>
+
+            <img src="images/evolution-phone.jpg" alt="Phone evolution">
+        </section>
+
+        <section>
+            <p>In 1998, Japanese operators introduced 172 12x12 pixels pictogram for messaging!</p>
 
             <img src="images/i_mode.png" style="width: 20%;" alt="iMode">
         </section>
 
         <section data-background="images/original-emoji.jpg">
-
-            <h4>Le MoMA vient d'acheter cette collection</h4>
-
+            <h3 class="no-caps">This collection is now part of MoMA permanent exhibit</h3>
         </section>
 
         <section>
-            <ul>
-                <li>Chaque opérateur avait son propre set propriétaire - la guerre de la concurrence pour avoir les emoji les plus cool 😎</li>
-                <li>La transmission était sur 2 octets (en utilisant un range privé Unicode)</li>
-                <li>Si vous étiez chez NTT DoCoMo, vous ne pouviez pas voir les emoji envoyés par votre collègue chez SoftBank Mobile 😧
+            <h2 class="no-caps">It was chaos</h2>
 
+            <ul>
+                <li>Each operator got it's own proprietary set - trying to be funnier than the others 😎</li>
+                <li>Pictograms were encoded on 2 bytes in a private use Unicode range...</li>
+                <li>... So you could have colisions between operator for different symbols!
                     <ul>
-                        <li>Avec le temps, les opérateurs ont ajouté un mapping...</li>
+                        <li>You could send a 🍔️ and the recipient got 🔥</li>
+                        <li>With time, operators had to hardcode specific mappings...</li>
                     </ul>
                 </li>
             </ul>
@@ -127,23 +158,28 @@
         </section>
 
         <section>
+            <h2 class="no-caps">The birth of Emoji</h2>
+
             <ul>
-                <li>Standardisation dans Unicode 6.0 en Octobre 2010
-                <li>855 emoji spécifiés, documentés et encodés par le Consortium Unicode
+                <li>855 emoji standardized in Unicode 6.0 in 2010
                     <ul>
-                        <li>Avec mapping pour les emoji Japonais existants</li>
-                        <li>Tour de Tokyo 🗼 mais pas Tour Eiffel</li>
+                        <li>Existing Japanese pictogram were kept</li>
+                        <li>New ones were added</li>
+                        <li>Existing icons in Unicode got their Emoji representation</li>
                     </ul>
                 </li>
             </ul>
 
             <p>🍢 🍤 🍥 🏯 👘 🎌 🗻 🎏</p>
+            <p>😑 😬 💩 🦄 🐙 🚙 🌦 🎸</p>
         </section>
 
 
-
         <section>
+            <h2 class="no-caps">Adoption</h2>
+
             <ul>
+                // https://blog.emojipedia.org/the-original-iphone-emoji-keyboard/
                 <li>Support complet dans l'iPhone en 2011 📱
                 <li>Tout le monde a suivi et nous pouvons maintenant transmettre 🍕 depuis un téléphone Android en France vers un téléphone Chinois sans aucun problème !</li>
                 <li><a href="http://caniemoji.com/">caniemoji.com</a></li>
@@ -169,6 +205,10 @@
             <p>
                 <img src="images/display.PNG" alt="emoji">
             </p>
+        </section>
+
+        <section>
+            todo: quelques emoji lol
         </section>
 
         <section>
@@ -1023,8 +1063,8 @@ O:-D=>😇
 </div>
 
 <footer class="joli">
-    « Comment indexer des Emoji avec Elasticsearch » &dash; Elastic FR 2016 &dash; <img
-        src="lib/font/logo-fond-noir.svg" style="height:1em; vertical-align: text-bottom;"/> 2016
+    « The journey to get pizzas while looking for 🍕 » &dash; Elastic{Meetup} #34 - Lausanne &dash; <img
+        src="lib/font/logo-fond-noir.svg" style="height:1em; vertical-align: text-bottom;"/> 2018
 </footer>
 
 
