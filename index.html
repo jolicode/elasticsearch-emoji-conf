@@ -179,143 +179,173 @@
             <h2 class="no-caps">Adoption</h2>
 
             <ul>
-                // https://blog.emojipedia.org/the-original-iphone-emoji-keyboard/
-                <li>Support complet dans l'iPhone en 2011 📱
-                <li>Tout le monde a suivi et nous pouvons maintenant transmettre 🍕 depuis un téléphone Android en France vers un téléphone Chinois sans aucun problème !</li>
+                <li>Early standard iPhone support in 2008, Japan only 🇯🇵
+                <li>Complete support in 2011
+                <li>Everyone followed, from Android to Windows</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">□ Support today □</h2>
+
+            <ul>
+                <li>Black and white only ☃️, colors, tofu... □</li>
+                <li>Apple iOS and OSX are leaders, it works in all apps</li>
+                <li>Android since 4.1</li>
+                <li>Microsoft Windows 10 (partial in 8 and 7)</li>
+                <li>Linux 🐧... <s>Build it yourself!</s> Ubuntu 18.04 native support</li>
                 <li><a href="http://caniemoji.com/">caniemoji.com</a></li>
             </ul>
         </section>
 
 
         <section>
-            <h2 class="no-caps">Les Emoji dans Unicode</h2>
+            <h2 class="no-caps">In Unicode</h2>
 
             <ul>
-                <li>🍕 est le code point U+1F355
-                <li>🏳 est U+1F3F3
-                <li>🌈 est U+1F308
+                <li>🍕 is code point <em>U+1F355</em>
+                <li>🏳 is code point <em>U+1F3F3</em>
+                <li>🌈 is code point <em>U+1F308</em>
             </ul>
+
+            <h3 class="fragment no-caps">It's just text displayed as images by your device!</h3>
         </section>
 
         <section>
-            <h2 class="no-caps">Les Emoji dans Unicode</h2>
+            <h2 class="no-caps">Image representation</h2>
 
-            <p>Ces emoji se comportent et se manipulent comme du texte. C'est votre système d'exploitation qui est capable de les afficher en image.</p>
+            <p>Each vendor have to design it's own image (and it's hard):</p>
 
             <p>
-                <img src="images/display.PNG" alt="emoji">
+                <img src="images/display-devices.png" alt="emoji display accross devices">
             </p>
+
+            <p>But remember - it's just text at the end.</p>
+
+            <p><small><a href="https://unicode.org/emoji/charts/full-emoji-list.html">Full emoji list.</a></small></p>
         </section>
 
         <section>
-            todo: quelques emoji lol
+            <img src="images/fail-samsung-cookies.png" alt="Emoji fail cookies">
         </section>
 
         <section>
-            <h2 class="no-caps">La composition</h2>
+            <img src="images/fail-google-burger.png" alt="Emoji fail burger order" style="width: 60%">
+        </section>
+
+        <section>
+            <img src="images/fail-samsung-hand.jpeg" alt="Emoji fail hands">
+        </section>
+
+        <section>
+            <h2>There is more complexity</h2>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Composition</h2>
+
+            <img src="images/raibowflag.png" alt="rainbow flag" style="position: absolute; right: 0; margin-top: 100px">
+            <ul>
+                <li>
+                    The following ZWJ Sequence display a rainbow flag!
+
+                    <ol>
+                        <li>🏳 <em>U+1F3F3</em></li>
+                        <li>ZWJ <em>U+200D</em></li>
+                        <li>🌈 <em>U+1F308</em></li>
+                    </ol>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Modifiers</h2>
+
+            <p  style="position: absolute; right: 0; margin-top: 100px; font-size: 170px">🤘🏽</p>
+            <ul>
+                <li>
+                    Fitzpatrick modifiers to change the skin tone:
+
+                    <ol>
+                        <li>🤘 <em>U+1F918</em>
+                        <li>🏽 <em>U+1F3FD</em>
+                    </ol>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Variation selector</h2>
 
             <ul>
                 <li>
-                    ZWJ Sequence
+                    You can force the color or text representation
 
                     <ul>
-                        <li>🏳 U+1F3F3 U+200D 🌈 U+1F308</li>
-                        <li>Rainbow FLAG ! <img src="images/raibowflag.png" alt="rainbow flag" style="height: 1.5em; display: inline-block; vertical-align: middle;"></li>
+                        <li><em>U+FE0E</em> for text: 🏳️‍
+                        <li><em>U+FE0F</em> for image: 🏳
                     </ul>
                 </li>
             </ul>
         </section>
 
         <section>
-            <h2 class="no-caps">Les modifiers</h2>
+            <h2 class="no-caps">Flags</h2>
 
             <ul>
                 <li>
-                    Modifiers Fitzpatrick
-
+                    Each country got it's own based on ISO 3166-1:
                     <ul>
-                        <li>🤘 U+1F918 et 🏽 U+1F3FD
-                        <li>🤘🏽
-                        <li>Ne doit pas altérer la recherche
+                        <li>🇨 <em>U+1F1E8</em> and 🇦 <em>U+1F1E6</em> display 🇨🇦
+                        <li>🇨🇭 🇫🇷 🇦🇪 🇸🇪
                     </ul>
                 </li>
             </ul>
         </section>
 
         <section>
-            <h2 class="no-caps">Sélecteur de variation</h2>
-
+            <h2 class="no-caps">Emoji can express</h2>
+            <h4>anything</h4>
             <ul>
-                <li>
-                    Variations
-
-                    <ul>
-                        <li>🏳️‍ U+FE0E pour forcer la version texte
-                        <li>🏳 U+FE0F pour forcer l'image
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Drapeaux</h2>
-
-            <ul>
-                <li>
-                    Pour chaque pays !
-
-                    <ul>
-                        <li>🇨 U+1F1E8 et 🇦 U+1F1E6 donnent 🇨🇦
-                        <li>🇫🇷 🇦🇪 🇸🇪
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Les emoji et le texte</h2>
-
-            <p>La spécification comporte maintenant :</p>
-
-            <ul>
-                <li>Des métiers 👮 ;</li>
-                <li>Des émotions 😍 ;
-                <li>De la nourriture 🍕 ;
-                <li>Des animaux 🐘 ;
-                <li>Des sports 🚴 ;
-                <li>Des objets 💐 📋 🔦…
+                <li>Work 👮</li>
+                <li>Emotions 😍
+                <li>Food 🍕
+                <li>Animals 🐘
+                <li>Sports 🚴
+                <li>Objets 💐
             </ul>
 
         </section>
 
         <section>
-            <h2 class="no-caps">L'utilisation des emoji</h2>
+            <h2 class="no-caps">There no way out</h2>
 
-            <h5>Vous n'y échapperez pas !</h5>
             <ul>
-                <li>Word of the Year du Oxford English Dictionary 2015 : 😂
-                <li>World Emoji Day le 17 Juillet 🎉
-                <li>Emojimovie: Express Yourself, au cinéma en 2017 🎥
-                <li>Supporté partout ! Saisie super simple et claviers dédiés sur mobile ⌨</li>
-                <li>Emojipedia.org fait 14 millions de pages vues par mois</li>
+                <li>Word of the Year 2015 in Oxford English Dictionary: 😂
+                <li>World Emoji Day on 17 of July 🎉
+                <li>Emojimovie: Express Yourself, in theaters last year 🎥
+                <li>Suppoted everywhere, very easy to type ⌨</li>
+                <li><a href="https://emojipedia.org/stats/">Emojipedia.org</a> got an average of 22 million page view per month 💥</li>
             </ul>
         </section>
 
         <section>
-            <h2>Oui, vos utilisateurs vont saisir 🍕 dans votre moteur de recherche !</h2>
+            <h2>Yes, users are going to type 🍕 in your search box!</h2>
         </section>
 
         <section>
-            <img src="images/yelp.PNG" alt="Yelp">
+            <img src="images/pizza-yelp-lausanne.png" alt="Yelp">
         </section>
         <section>
-            <img src="images/github.PNG" alt="Github">
+            <img src="images/github.png" alt="Github">
         </section>
         <section>
-            <img src="images/twitter.PNG" alt="Twitter">
+            <img src="images/twitter.png" alt="Twitter">
+        </section>
 
-            <p>WTF!</p>
-        </section>
+
+        
         <section>
             <h3>Conclusion : le père noël n'existe pas 😨</h3>
 
