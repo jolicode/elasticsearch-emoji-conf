@@ -62,8 +62,8 @@
         <section>
             <h2>The journey to get pizzas while looking for 🍕</h2>
 
-            <p><img src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch"></p>
             <h4>A story about emoji and Elasticsearch</h4>
+            <p><img src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch"></p>
         </section>
 
         <section data-state="jolistate">
@@ -191,12 +191,12 @@
             <h2 class="no-caps">□ Support today □</h2>
 
             <ul>
-                <li>Black and white only ☃️, colors, tofu □...</li>
                 <li>Apple iOS and OSX are leaders, it works in all apps</li>
                 <li>Android since 4.1</li>
                 <li>Microsoft Windows 10 (partial in 8 and 7)</li>
                 <li>Linux 🐧... <s>Build it yourself!</s> Ubuntu 18.04 native</li>
                 <li><a href="http://caniemoji.com/">caniemoji.com</a></li>
+                <li>Common issues: black and white only ☃️, tofu □...</li>
             </ul>
         </section>
 
@@ -362,39 +362,37 @@
         </section>
 
         <section>
-            <h2 class="no-caps">Official annotations</h2>
+            <h2 class="no-caps">CLDR annotations of 🍕</h2>
 
             <ul>
-                <li>With 🍕:
-                    <ul>
-                        <li>English: <em>pizza</em>, cheese, slice</li>
-                        <li>French: <em>pizza</em>, fromage, tranche</li>
-                    </ul>
-                </li>
+                <li>English: <em>pizza</em>, cheese, slice</li>
+                <li>French: <em>pizza</em>, fromage, tranche</li>
             </ul>
 
-            <h5 class="no-caps">We have to index "pizza" <br>when the document contains a 🍕 emoji</h5>
+            <h4 class="no-caps">We have to index "pizza" <br>when the document contains a 🍕 emoji</h4>
+            <h4 class="no-caps fragment">Sounds like a job for synonyms!</h4>
         </section>
 
         <section>
-            <img src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch">
+            <img style="width: 100%" src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch">
         </section>
 
+
         <section>
-            <h2 class="no-caps">L'analyse Elasticsearch</h2>
+            <h2 class="no-caps">Elasticsearch Analyzer</h2>
 
             <ol>
                 <li>char_filter : <span class="emphasis">« Meetup ELASTICSEARCH ! »</span>
-                <li>tokenizer : <span class="emphasis">[Meetup] [ELASTICSEARCH]</span>
-                <li>token_filter : <span class="emphasis">[meetup] [elasticsearch]</span>
+                <li>tokenizer : <em>Meetup</em> <em>ELASTICSEARCH</em>
+                <li>token_filter : <em>meetup</em> <em>elasticsearch</em>
             </ol>
 
-            <p>🏷 Les synonymes peuvent être ajoutés via un token_filter</p>
+            <p>🏷 <strong>synonym</strong> token_filter can add Emoji annotations</p>
         </section>
 
 
         <section>
-            <h2 class="no-caps">Ajout des synonymes</h2>
+            <h2 class="no-caps">Synonym token filter</h2>
 
             <pre><code class="hljs json" data-trim>
 "english_emoji": {
@@ -403,109 +401,124 @@
 }
 </code></pre>
             <pre><code class="hljs txt" data-trim>
-🍺 => 🍺, bar, beer, drink, mug
+🍕 => 🍕, cheese, pizza, slice
 🍻 => 🍻, bar, beer, clink, drink, mug
-🍽 => 🍽, cooking, fork, knife, plate
-🍴 => 🍴, cooking, fork, knife
-🍳 => 🍳, egg, frying, pan
+🚇 => 🚇, metro, subway
 </code></pre>
         </section>
 
         <section>
-            <h2 class="no-caps">Ajout des synonymes</h2>
+            <h2 class="no-caps">The synonym file</h2>
 
             <ul>
-                <li>Le CLDR fourni les annotations dans toutes les langues</li>
-                <li>Je fournis juste les fichiers de synonymes déjà prêt :</li>
+                <li>CLDR publish (on SVN 😱) annotations for all languages</li>
+                <li>I maintain easy to use synonym files from those data:</li>
             </ul>
 
-            <p><a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a></p>
+            <p>🎉 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a> 🎉</p>
+
+            <small>+1500 lines, ~90 languages, flags and composites support</small>
         </section>
 
 
         <section>
-            <pre><code class="hljs json" data-trim>
-/_analyze?tokenizer=standard&text=I love &#x1F355;
+            <h2>BUT WAIT</h2>
+        </section>
 
+        <section>
+            <pre><code class="hljs json" data-trim>GET _analyze
 {
-  "tokens" : [
+  "analyzer": "standard",
+  "text": "Pizza"
+}
+</code></pre>
+            <pre><code class="hljs json" data-trim>{
+  "tokens": [
     {
-      "token" : "I",
-      "position" : 0
-    },
-    {
-      "token" : "love",
-      "position" : 1
+      "token": "pizza",
+      "start_offset": 0,
+      "end_offset": 5,
+      "type": "&lt;ALPHANUM&gt;",
+      "position": 0
     }
   ]
 }
-            </code></pre>
-
-            <p class="fragment">Mes synonymes ne seront jamais ajoutés 😢</p>
+</code></pre>
+            <p style="position:absolute;top:10%;right:10%;font-size: 5em">👍</p>
         </section>
 
+        <section>
+            <pre><code class="hljs json" data-trim>GET _analyze
+{
+  "analyzer": "standard",
+  "text": "🍕"
+}</code></pre>
+            <pre><code class="hljs json" data-trim>{
+  "tokens": []
+}
+</code></pre>
+            <p style="position:absolute;top:10%;right:10%;font-size: 5em">👎</p>
+
+            <h4>Elasticsearch<br> does not like emoji</h4>
+        </section>
 
         <section>
-            <h2 class="no-caps">Pas de token &#x1F355; ?</h2>
+            <h3 class="no-caps">No &#x1F355; token, no synonym!</h3>
 
             <ul>
-                <li>Le <strong>standard</strong> tokenizer est basé sur <a
-                        href="http://www.unicode.org/reports/tr29/tr29-17.html">"Unicode Text Segmentation"</a>
-
-                    version 17, publié en 2010, sans support des Emoji
-                <li>Un emoji est donc considéré comme un caractère à ignorer au même titre que la ponctuation</li>
+                <li>The <strong>standard</strong> tokenizer is based on <a
+                        href="http://www.unicode.org/reports/tr29/tr29-17.html">"Unicode Text Segmentation"</a> version 17, published in 2010, before Emoji standardization
+                <li>Emoji are excluded like punctuation</li>
             </ul>
 
             <p>😖</p>
         </section>
 
-
         <section>
-            <h2 class="no-caps">Le whitespace tokenizer</h2>
+            <h2 class="no-caps">whitespace tokenizer</h2>
 
             <ul>
                 <li>
-                    ☑ Avantages
+                    ☑ The good
                     <ul>
-                        <li>On conserve les Emoji ! 😎</li>
+                        <li>Emoji are kept! 😎</li>
                     </ul>
                 </li>
                 <li>
-                    ❌ Inconvénients
+                    ❌ The bad
                     <ul>
-                        <li>Plus bête que le standard tokenizer</li>
-                        <li>Laisse la ponctuation</li>
-                        <li>Ne met pas en lowercase</li>
+                        <li>Dumb</li>
+                        <li>Keep all punctuation</li>
+                        <li>Does not lowercase</li>
                     </ul>
                 </li>
             </ul>
         </section>
 
         <section>
-            <pre><code class="hljs json" data-trim>
-/_analyze?tokenizer=whitespace&text=I love &#x1F355;
-
+            <pre><code class="hljs json" data-trim>GET _analyze
 {
-  "tokens" : [
+  "tokenizer": "whitespace",
+  "text": "Pineapple 🍕"
+}</code></pre>
+
+            <pre><code class="hljs json" data-trim>{
+  "tokens": [
     {
-      "token" : "I"
+      "token": "Pineapple",
+      "type": "word"
     },
     {
-      "token" : "love"
-    },
-    {
-      "token" : "\uD83C\uDF55"
+      "token": "🍕",
+      "type": "word"
     }
   ]
-}
-            </code></pre>
-
-            <p class="fragment">(Vous avez remarqué les surrogate pair UTF-16 🤓 ?)</p>
+}</code></pre>
         </section>
 
 
         <section>
-            <h2 class="no-caps">On ajoute des token_filter</h2>
+            <h2 class="no-caps">Cleaning with token_filter</h2>
 
             <pre><code class="hljs json" data-trim>
 "punctuation_filter": {
@@ -518,29 +531,29 @@
   "min": 1
 }</code></pre>
 
-            <p>Nécessaire pour enlever la ponctuation et les éventuels tokens vides.</p>
+            <p>Remove punctuation and empty tokens</p>
 
             <p>!"#$%&'()*+,-./:;<=>?@[]^_`{|}~</p>
         </section>
 
         <section>
-            <h2 class="no-caps">Ne pas oublier les copains</h2>
+            <h2 class="no-caps">More cleaning</h2>
 
             <ul style="font-size: 0.8em;">
-                <li>\uFE0E: VARIATION SELECTOR-15 (force text representation)
-                <li>\uFE0F: VARIATION SELECTOR-16 (force graphic representation)
-                <li>\uD83C\uDFFB: EMOJI MODIFIER FITZPATRICK TYPE-1–2 (skin tone)
-                <li>\uD83C\uDFFC: EMOJI MODIFIER FITZPATRICK TYPE-3 (skin tone)
-                <li>\uD83C\uDFFD: EMOJI MODIFIER FITZPATRICK TYPE-4 (skin tone)
-                <li>\uD83C\uDFFE: EMOJI MODIFIER FITZPATRICK TYPE-5 (skin tone)
-                <li>\uD83C\uDFFF: EMOJI MODIFIER FITZPATRICK TYPE-6 (skin tone)
-                <li>\u200D: ZERO WIDTH JOINER
+                <li style="padding: 2px 0"><em>\uFE0E</em> VARIATION SELECTOR-15 (force text representation)
+                <li style="padding: 2px 0"><em>\uFE0F</em> VARIATION SELECTOR-16 (force graphic representation)
+                <li style="padding: 2px 0"><em>\uD83C\uDFFB</em> EMOJI MODIFIER FITZPATRICK TYPE-1–2 (skin tone)
+                <li style="padding: 2px 0"><em>\uD83C\uDFFC</em> EMOJI MODIFIER FITZPATRICK TYPE-3 (skin tone)
+                <li style="padding: 2px 0"><em>\uD83C\uDFFD</em> EMOJI MODIFIER FITZPATRICK TYPE-4 (skin tone)
+                <li style="padding: 2px 0"><em>\uD83C\uDFFE</em> EMOJI MODIFIER FITZPATRICK TYPE-5 (skin tone)
+                <li style="padding: 2px 0"><em>\uD83C\uDFFF</em> EMOJI MODIFIER FITZPATRICK TYPE-6 (skin tone)
+                <li style="padding: 2px 0"><em>\u200D</em> ZERO WIDTH JOINER
             </ul>
         </section>
 
 
         <section>
-            <h4 class="no-caps">Ajout des modifiers</h4>
+            <h2 class="no-caps">Complete the token_filter</h2>
 
             <pre><code class="hljs json" data-trim>
 "punctuation_filter": {
@@ -550,7 +563,7 @@
 }
 </code></pre>
 
-            <h4 class="no-caps">Suppression du ZWJ via un char_filter</h4>
+            <h4 class="no-caps">ZWJ to be remove sooner via char_filter</h4>
 
             <pre><code class="hljs json" data-trim>
 "zwj_char_filter": {
@@ -564,18 +577,18 @@
 
 
         <section>
-            <h2 class="no-caps">L'analyzer complet</h2>
+            <h2 class="no-caps">The complete analyzer</h2>
 
             <pre><code class="hljs json" data-trim>
 "analyzer": {
   "english_with_emoji": {
-    "char_filter": "zwj_char_filter", // ZWJ
-    "tokenizer": "whitespace",        // Découpage
+    "char_filter": "zwj_char_filter", // Remove ZWJ
+    "tokenizer": "whitespace",        // Tokenize
     "filter": [
-      "lowercase",                    // Minuscules
+      "lowercase",
       "punctuation_filter",           // Modifiers...
-      "remove_empty_filter",          // Tokens vide
-      "english_emoji"                 // Synonymes !
+      "remove_empty_filter",          // Empty tokens
+      "english_emoji"                 // Synonyms!
     ]
   }
 }
