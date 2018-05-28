@@ -327,7 +327,7 @@
             <ul>
                 <li>Word of the Year 2015 in Oxford English Dictionary: 😂
                 <li>World Emoji Day on 17 of July 🎉
-                <li>Emojimovie: Express Yourself, in theaters last year 🎥
+                <li><strong>Emojimovie: Express Yourself</strong>, in theaters last year 🎥
                 <li>Supported everywhere, very easy to type ⌨</li>
                 <li><a href="https://emojipedia.org/stats/">Emojipedia.org</a> got an average of 22 million page view per month 💥</li>
             </ul>
@@ -365,10 +365,13 @@
             <h2 class="no-caps">CLDR annotations of 🍕</h2>
 
             <ul>
-                <li>English: <em>pizza</em>, cheese, slice</li>
-                <li>French: <em>pizza</em>, fromage, tranche</li>
+                <li>English: pizza, cheese, slice</li>
+                <li>French: pizza, fromage, tranche</li>
             </ul>
 
+            <br>
+            <br>
+            <br>
             <h4 class="no-caps">We have to index "pizza" <br>when the document contains a 🍕 emoji</h4>
             <h4 class="no-caps fragment">Sounds like a job for synonyms!</h4>
         </section>
@@ -382,12 +385,19 @@
             <h2 class="no-caps">Elasticsearch Analyzer</h2>
 
             <ol>
-                <li>char_filter : <span class="emphasis">« Meetup ELASTICSEARCH ! »</span>
-                <li>tokenizer : <em>Meetup</em> <em>ELASTICSEARCH</em>
-                <li>token_filter : <em>meetup</em> <em>elasticsearch</em>
+                <li>char_filter : <em>Searching 🍕 in Elasticsearch</em>
+                <li>tokenizer : <em>Searching</em>
+                    <em>🍕</em>
+                    <em>in</em>
+                    <em>Elasticsearch</em>
+                <li>token_filter :
+                    <em>searching</em>
+                    <em>🍕</em>
+                    <em>in</em>
+                    <em>elasticsearch</em>
             </ol>
 
-            <p>🏷 <strong>synonym</strong> token_filter can add Emoji annotations</p>
+            <p class="fragment">🏷 <strong>synonym</strong> token_filter can add Emoji annotations</p>
         </section>
 
 
@@ -395,29 +405,19 @@
             <h2 class="no-caps">Synonym token filter</h2>
 
             <pre><code class="hljs json" data-trim>
-"english_emoji": {
-    "type": "synonym",
-    "synonyms_path": "analysis/emoji-synonyms-en.txt"
-}
-</code></pre>
-            <pre><code class="hljs txt" data-trim>
-🍕 => 🍕, cheese, pizza, slice
-🍻 => 🍻, bar, beer, clink, drink, mug
-🚇 => 🚇, metro, subway
-</code></pre>
-        </section>
-
-        <section>
-            <h2 class="no-caps">The synonym file</h2>
-
-            <ul>
-                <li>CLDR publish (on SVN 😱) annotations for all languages</li>
-                <li>I maintain easy to use synonym files from those data:</li>
-            </ul>
-
-            <p>🎉 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a> 🎉</p>
-
-            <small>+1500 lines, ~90 languages, flags and composites support</small>
+PUT demo
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "english_emoji": {
+          "type": "synonym",
+          "synonyms": ["🍕 => 🍕, cheese, pizza, slice"]
+        },
+      }
+    }
+  }
+}</code></pre>
         </section>
 
 
@@ -499,7 +499,7 @@
             <pre><code class="hljs json" data-trim>GET _analyze
 {
   "tokenizer": "whitespace",
-  "text": "Pineapple 🍕"
+  "text": "Pineapple 🍕!"
 }</code></pre>
 
             <pre><code class="hljs json" data-trim>{
@@ -509,7 +509,7 @@
       "type": "word"
     },
     {
-      "token": "🍕",
+      "token": "🍕!",
       "type": "word"
     }
   ]
@@ -531,7 +531,7 @@
   "min": 1
 }</code></pre>
 
-            <p>Remove punctuation and empty tokens</p>
+            <p><code>\\p{Punct}</code> catch punctuation:</p>
 
             <p>!"#$%&'()*+,-./:;<=>?@[]^_`{|}~</p>
         </section>
@@ -539,7 +539,7 @@
         <section>
             <h2 class="no-caps">More cleaning</h2>
 
-            <ul style="font-size: 0.8em;">
+            <ul style="font-size: 0.7em;">
                 <li style="padding: 2px 0"><em>\uFE0E</em> VARIATION SELECTOR-15 (force text representation)
                 <li style="padding: 2px 0"><em>\uFE0F</em> VARIATION SELECTOR-16 (force graphic representation)
                 <li style="padding: 2px 0"><em>\uD83C\uDFFB</em> EMOJI MODIFIER FITZPATRICK TYPE-1–2 (skin tone)
@@ -580,55 +580,172 @@
             <h2 class="no-caps">The complete analyzer</h2>
 
             <pre><code class="hljs json" data-trim>
-"analyzer": {
-  "english_with_emoji": {
-    "char_filter": "zwj_char_filter", // Remove ZWJ
-    "tokenizer": "whitespace",        // Tokenize
-    "filter": [
-      "lowercase",
-      "punctuation_filter",           // Modifiers...
-      "remove_empty_filter",          // Empty tokens
-      "english_emoji"                 // Synonyms!
-    ]
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "english_with_emoji": {
+          "char_filter": "zwj_char_filter",
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase",
+            "punctuation_filter",
+            "remove_empty_filter",
+            "english_emoji"
+          ]
+        }
+      },
+      "char_filter": {
+        "zwj_char_filter": {
+          "type": "mapping",
+          "mappings": [
+            "\\u200D=>"
+          ]
+        }
+      },
+      "filter": {
+        "remove_empty_filter": {
+          "type": "length",
+          "min": 1
+        },
+        "english_emoji": {
+          "type": "synonym",
+          "synonyms": ["🍕 => 🍕, cheese, pizza, slice"]
+        },
+        "punctuation_filter": {
+          "type": "pattern_replace",
+          "pattern": """\p{Punct}|\uFE0E|\uFE0F|\uD83C\uDFFB|\uD83C\uDFFC|\uD83C\uDFFD|\uD83C\uDFFE|\uD83C\uDFFF""",
+          "replace": ""
+        }
+      }
+    }
   }
 }
 </code></pre>
         </section>
 
         <section>
-            <h2 class="no-caps">Et ça marche !</h2>
+            <h2 class="no-caps">It works!</h2>
 
             <pre><code class="hljs json" data-trim>
-GET /en-emoji/_analyze?analyzer=english_with_emoji
+GET /demo/_analyze
 {
-  "text": "A 🍩︎ please."
-}
+  "analyzer": "english_with_emoji",
+  "text": "A 🍕 please!"
+}</code></pre>
 
-["a", "🍩",︎ "dessert", "donut", "sweet", "please"]
-</code></pre>
+            <p>
+                <em>a</em>
+                <em>🍕</em>
+                <em>cheese</em>
+                <em>pizza</em>
+                <em>slice</em>
+                <em>please</em>
+            </p>
         </section>
 
-        <section>
-            <h2 class="no-caps">Aller plus loin...</h2>
-        </section>
 
         <section>
-            <h2 class="no-caps">ICU, CLDR et Unicode avancent vite</h2>
+            <h2 class="no-caps">Emoji search made easy</h2>
 
             <ul>
-                <li>ICU supporte les Emoji depuis quelques versions
+                <li>We can search with "Pizza"</li>
+                <li>We can search with "🍕"</li>
+            </ul>
+
+            <p>One emoji done, 2776 to go!</p>
+            <p class="fragment">😱</p>
+        </section>
+
+        <section>
+            <h2 class="no-caps">The synonym file</h2>
+
+            <ul>
+                <li>CLDR publish (on SVN 😱) annotations for all languages</li>
+                <li>I maintain easy to use synonym files from those data:</li>
+            </ul>
+
+            <p>🎉 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a> 🎉</p>
+
+            <small>+1500 lines, ~90 languages, flags and composites support</small>
+        </section>
+
+        <section>
+            <pre><code class="hljs json" data-trim>🐻 => 🐻, bear, bear face, face
+🐨 => 🐨, bear, koala
+🐼 => 🐼, face, panda, panda face
+🐾 => 🐾, feet, paw, paw prints, print
+🦃 => 🦃, bird, turkey
+🐔 => 🐔, bird, chicken
+🐓 => 🐓, bird, rooster
+🐣 => 🐣, baby, bird, chick, hatching, hatching chick
+🐤 => 🐤, baby, baby chick, bird, chick
+🐥 => 🐥, baby, bird, chick, front-facing baby chick
+🌴 => 🌴, palm, palm tree, tree
+🌵 => 🌵, cactus, plant
+🌾 => 🌾, ear, grain, rice, sheaf of rice
+🌿 => 🌿, herb, leaf
+☘ => ☘, plant, shamrock
+🍀 => 🍀, 4, clover, four, four leaf clover, leaf
+🍁 => 🍁, falling, leaf, maple, maple leaf
+🍂 => 🍂, fallen leaf, falling, leaf
+🍃 => 🍃, blow, flutter, leaf, leaf fluttering in wind, wind
+🍇 => 🍇, fruit, grape, grapes</code></pre>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Thank you</h2>
+
+            <h1>👏</h1>
+        </section>
+
+        <section>
+            <h2 class="no-caps">We can do better! 💪</h2>
+        </section>
+
+        <section>
+            <h2 class="no-caps">ICU, CLDR and Unicode move fast</h2>
+
+            <ul>
+                <li>ICU support Emoji for a long time
 
                     <ul>
-                        <li>ICU est disponible sous forme de plugin : <span class="emphasis">analysis-icu</span>
-                        <li>Ce plugin est basé sur la version <span class="emphasis">54</span> d'ICU
-                        <li>Dans Lucene, le ICU Tokenizer utilise la version <span class="emphasis">56.1</span>
-                        <li>Nous sommes actuellement à la version <span class="emphasis">58.1</span>
+                        <li>ICU is exposed as Elastic plugin: <span class="emphasis">analysis-icu</span>
+                        <li>Use version <span class="emphasis">59.1</span> of icu4j
+                        <li>Currently available version is <span class="emphasis">61.1</span>
                     </ul>
                 </li>
-                <li>Le ICUTokenizer de Lucene marque quand même les Emoji comme des "non mots"
+                <li>Still, Lucene ICUTokenizer tag Emoji as "not words" 😔
             </ul>
         </section>
 
+        <section>
+            <h2 class="no-caps">ICUTokenizer not compatible</h2>
+
+            <pre><code class="hljs json" data-trim>GET /demo/_analyze
+{
+  "tokenizer": "icu_tokenizer",
+  "filter": [
+    "english_emoji"
+    ],
+  "text": "A 🍕 please!"
+}</code></pre>
+
+            <p>Error illegal_argument_exception: <code>term: 🍕 was completely eliminated by analyzer</code></p>
+        </section>
+
+        <section>
+            <h2 class="no-caps">ICUTokenizer not compatible</h2>
+
+            <pre><code class="hljs json" data-trim>GET /demo/_analyze
+{
+  "tokenizer": "icu_tokenizer",
+  "text": "A 🍕 please!"
+}</code></pre>
+
+            <p><em>A</em> <em>please</em></p>
+        </section>
+<!--
         <section>
             <h2 class="no-caps">La dernière version d'ICU</h2>
 
@@ -646,30 +763,29 @@ GET /en-emoji/_analyze?analyzer=english_with_emoji
                 </li>
             </ul>
         </section>
-
+-->
         <section>
-            <h2 class="no-caps">Plonger dans le <a
-                    href="https://svn.apache.org/repos/asf/lucene/dev/branches/lucene6835/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/ICUTokenizer.java">code</a></h2>
+            <h2 class="no-caps">Deep in Lucene <a
+                    href="https://github.com/apache/lucene-solr/blob/f8ae144054b67cc65be655e5fb95391cfab26362/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/ICUTokenizer.java#L205-L210">code</a></h2>
 
-            <p>Dans ICUTokenizer.java, status 0 = ignoré :</p>
+            <p>ICUTokenizer.java, status 0 means ignored:</p>
 
             <pre><code class="hljs java" data-trim>
 // find the next set of boundaries,
 // skipping over non-tokens (rule status 0)
 int end = breaker.next();
-while (start != BreakIterator.DONE
+while (end != BreakIterator.DONE
                 && breaker.getRuleStatus() == 0) {
-    start = end;
-    end = breaker.next();
+  start = end;
+  end = breaker.next();
 }
 </code></pre>
 
-            <p class="fragment">Lucene utilise SVN 😱</p>
-            <p class="fragment">Unicode aussi 😵</p>
+            <p class="fragment">Unicode use SVN 😱</p>
         </section>
 
         <section>
-            <h2 class="no-caps">RBBI et RuleStatus</h2>
+            <h2 class="no-caps">RBBI and RuleStatus</h2>
 
             <pre><code class="hljs java" data-trim>!!chain;
 $CR                 = [\p{Word_Break = CR}];
@@ -817,7 +933,7 @@ $E_Base ($Extend | $Format | $ZWJ)*;
 $E_Modifier ($Extend | $Format | $ZWJ)*;
 </code></pre>
 
-            <p>Pas de "status" pour les Emoji</p>
+            <p>There is no "status" for Emoji</p>
         </section>
 
 
