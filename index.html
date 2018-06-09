@@ -722,20 +722,7 @@ GET /demo/_analyze
             </ul>
         </section>
 
-        <section>
-            <h2 class="no-caps">ICUTokenizer not compatible</h2>
 
-            <pre><code class="hljs json" data-trim>GET /demo/_analyze
-{
-  "tokenizer": "icu_tokenizer",
-  "filter": [
-    "english_emoji"
-    ],
-  "text": "A 🍕 please!"
-}</code></pre>
-
-            <p>Error illegal_argument_exception: <code>term: 🍕 was completely eliminated by analyzer</code></p>
-        </section>
 
         <section>
             <h2 class="no-caps">ICUTokenizer not compatible</h2>
