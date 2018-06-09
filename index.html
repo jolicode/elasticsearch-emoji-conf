@@ -7,9 +7,9 @@
     pizza = &#x1F355;
     -->
 
-    <title>The journey to get pizzas while looking for "🍕"</title>
+    <title>The journey to get pizza while looking for "🍕"</title>
 
-    <meta name="description" content="The journey to get pizzas while looking for 🍕">
+    <meta name="description" content="The journey to get pizza while looking for 🍕">
     <meta name="author" content="JoliCode">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,7 +60,7 @@
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
         <section>
-            <h2>The journey to get pizzas while looking for 🍕</h2>
+            <h2>The journey to get pizza while looking for 🍕</h2>
 
             <h4>A story about emoji and Elasticsearch</h4>
             <p><img src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch"></p>
@@ -393,6 +393,9 @@
                 <li>token_filter :
                     <em>searching</em>
                     <em>🍕</em>
+                    <em>pizza</em>
+                    <em>cheese</em>
+                    <em>slice</em>
                     <em>in</em>
                     <em>elasticsearch</em>
             </ol>
@@ -745,25 +748,7 @@ GET /demo/_analyze
 
             <p><em>A</em> <em>please</em></p>
         </section>
-<!--
-        <section>
-            <h2 class="no-caps">La dernière version d'ICU</h2>
 
-            <ul>
-                <li>Avec ma version basée sur whitespace :
-                    <ul>
-                        <li>🏳 : Drapeau blanc</li>
-                        <li>🌈 : Arc-en-ciel</li>
-                    </ul>
-                </li>
-                <li>Avec une compréhension des séquences :
-                    <ul>
-                        <li><img src="images/raibowflag.png" alt="rainbow flag" style="height: 1.5em; display: inline-block; vertical-align: middle;"> : Drapeau Arc-en-ciel, LGBT, Gay pride</li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
--->
         <section>
             <h2 class="no-caps">Deep in Lucene <a
                     href="https://github.com/apache/lucene-solr/blob/f8ae144054b67cc65be655e5fb95391cfab26362/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/ICUTokenizer.java#L205-L210">code</a></h2>
@@ -938,104 +923,110 @@ $E_Modifier ($Extend | $Format | $ZWJ)*;
 
 
         <section>
-            <h2 class="no-caps">ICUTokenizer rule_files</h2>
+            <h2 class="no-caps">icu_tokenizer rule_files</h2>
 
             <ul>
-                <li>Fonctionnalité <a
-                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/5.0/analysis-icu-tokenizer.html">expérimentale
-                    dans icu_tokenizer</a></li>
-                <li>
+                <li>Experimental (not sure why) functionality <a
+                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-icu-tokenizer.html">in icu_tokenizer</a></li>
+                <li>Our own RBBI rules!
 
-                    Possibilité de déclarer des fichiers de rules RBBI :
-
-                    <pre><code class="hljs java" data-trim>"tokenizer" : {
-    "icu_user_file" : {
+                    <pre><code class="hljs json" data-trim>"tokenizer" : {
+    "my_emoji_tokenizer" : {
        "type" : "icu_tokenizer",
-       "rule_files" : "Latn:KeywordTokenizer.rbbi"
+       "rule_files" : "Latn:Emoji.rbbi"
     }
 }
 </code></pre>
                 </li>
-                <li class="fragment">❌ Ne remplis pas mon besoin car lié à une écriture, et écrase les régles pré-définis</li>
             </ul>
         </section>
 
 
         <section>
-            <h2 class="no-caps">Notre propre plugin !</h2>
+            <h2 class="no-caps">The rule_files option</h2>
+
+            <ul>
+                <li>Latn:Emoji.rbbi
+
+                    <ul>
+                        <li>ISO 15924 Code like Latn, Zyyy...</li>
+                        <li>A file in Elasticsearch config/ directory</li>
+                    </ul>
+                </li>
+                <li>We have to override the rules for all scripts</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">The rule_files option</h2>
+
+            <pre><code class="hljs json" data-trim>{
+  "tokenizer": {
+    "icu_emoji_tokenizer": {
+      "type": "icu_tokenizer",
+        "rule_files": "Latn:Emoji.rbbi,Zyyy:Emoji.rbbi"
+      }
+    }
+}</code></pre>
+
+            <p>Emoji.rbbi will be used for <br>undetermined script (Zyyy) and Latin (Latn).</p>
+        </section>
+
+
+
+        <section>
+            <h2 class="no-caps">Our own plugin?!</h2>
 
             <h1>😮 😮 😮</h1>
         </section>
 
         <section>
-            <h2 class="no-caps">Spécifications</h2>
+            <h2 class="no-caps">Specifications</h2>
 
             <ul>
-                <li>La dernière version d'ICU</li>
-                <li>Tokenizer compatible <span class="emphasis">icu_tokenizer</span></li>
-                <li>Marquer les emoji avec le status {200}</li>
-                <li>Éventuellement embarquer les synonymes</li>
-                <li>Simplifier le support des emoji 👌</li>
+                <li>Up to date ICU</li>
+                <li>Compatible with <span class="emphasis">icu_tokenizer</span></li>
+                <li>Edit the default RBBI rules to mark emoji as {200}</li>
+                <li>Works for all scripts / languages</li>
+                <li>Ship with the synonyms</li>
             </ul>
         </section>
 
+
+
         <section>
-            <h2 class="no-caps">Écrire un plugin</h2>
+            <h2 class="no-caps">Writing an Elastic plugin</h2>
 
             <ul>
                 <li>Documentation <a
-                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugin-authors.html">"Allez voir le code ici"</a>
+                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugin-authors.html">tells you to look at the code</a>
                     <ul>
-                        <li>Pas d'explication sur les bonnes pratiques
-                        <li>Comment builder ? Distribuer ?
-                        <li>Avec Elasticsearch 5, une release par version d'Elasticsearch
+                        <li>No best practices
+                        <li>How to build? How to ship?
+                        <li>Since Elasticsearch 5, you must build the plugin at each release
                     </ul>
-
                 </li>
-                <li>Un effort en cours pour aider à la réalisation de plugin Ingest</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Écrire un plugin</h2>
-
-            <ul>
-                <li>Build basé sur Gradle
-                <li>Il faut Gradle 2.13 uniquement !
-                <li>Plein de checks automatique
-                <li>Pas de documentation sur la configuration
-                <li>Zéro connaissance de l'écosystème Java 😯
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Quelques flags utiles</h2>
-
-            <ul>
-                <li><code>licenseHeaders.enabled</code>
-                <li><code>checkstyleTest.enabled</code>
-                <li><code>dependencyLicenses.enabled</code>
-                <li><code>thirdPartyAudit.enabled</code>
-                <li><code>test.enabled</code>
+                <li>I'm no Java developer!</li>
             </ul>
         </section>
 
 
         <section>
-            <h2 class="no-caps">Commandes Gradle</h2>
+            <h2 class="no-caps">Gradle to the rescue</h2>
 
             <ul>
-                <li><code>gradle idea</code> 💗 pour IntelliJ
+                <li><code>gradle idea</code> 💗 for IntelliJ
                 <li><code>gradle tasks</code>
-                <li><code>gradle clean check</code> pour builder
-                <li><code>gradle clean check assemble</code> pour publier
+                <li><code>gradle clean check</code> to build
+                <li><code>gradle clean check assemble</code> to zip
             </ul>
         </section>
 
         <section>
-            <h2 class="no-caps">Gradle fait tout</h2>
+            <h2 class="no-caps">Gradle handle a lot</h2>
 
-            <p>Le livrable final est fait automatiquement :</p>
+            <p>The final zip for the plugin is done:</p>
 
             <pre><code class="hljs text" data-trim>
 analysis-emoji-5.0.0.zip
@@ -1057,9 +1048,9 @@ elasticsearch.version=5.0.0
 
 
         <section>
-            <h2 class="no-caps">Plugin simple</h2>
+            <h2 class="no-caps">The code</h2>
 
-            <p>Juste un TokenizerFactory, des tests et une configuration custom pour ICUTokenizer :</p>
+            <p>I use TokenizerFactory, and extend the DefaultICUTokenizerConfig:</p>
 
                 <pre><code class="hljs java" data-trim>defaultRules = defaultRules.replace(
     "!!forward;",
@@ -1074,22 +1065,27 @@ defaultRules = defaultRules.replace(
             </code></pre>
         </section>
 
+        <section>
+            <h3 class="no-caps">🌠 Quick and dirty! 🏋</h3>
+        </section>
 
         <section>
-            <h2 class="no-caps">Plein d'idées pour la suite</h2>
+            <h2 class="no-caps">I need help</h2>
 
             <ul>
-                <li>Le développement est ouvert sur Github</li>
                 <li><a href="https://github.com/jolicode/emoji-search">https://github.com/jolicode/emoji-search</a></li>
-                <li>Toute aide est la bienvenue 💘</li>
-                <li class="fragment">🆘 Vraiment, HELP ! 🆘</li>
+                <li>How to ship the emoji synonyms?</li>
+                <li>Updating ICU to 61.1?</li>
+                <li>Automating the build?</li>
+                <li>Ship somewhere?</li>
+                <li class="fragment">🆘 Help 🆘</li>
             </ul>
         </section>
 
 
 
         <section>
-            <h2 class="no-caps">Utilisation</h2>
+            <h2 class="no-caps">Usage</h2>
 
             <pre><code class="hljs java" data-trim>"analyzer": {
    "english_with_emoji": {
@@ -1101,47 +1097,55 @@ defaultRules = defaultRules.replace(
    }
  }</code></pre>
         </section>
-        <section>
-            <h2 class="no-caps">Résultat</h2>
 
-            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
+        <section>
+            <h2 class="no-caps">Final result</h2>
+
+            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze
 {
+  "analyzer": "english_with_emoji",
   "text": "I live in 🇫🇷 and I'm 👩‍🚀"
 }</code></pre>
 
-            <p>i live in 🇫🇷 france and i'm 👩‍🚀 astronaut rocket woman</p>
+            <p><em>i</em> <em>live</em> <em>in</em> <em>🇫🇷</em> <em>france</em> <em>and</em> <em>i'm</em> <em>👩‍🚀</em> <em>astronaut</em> <em>rocket</em> <em>woman</em></p>
         </section>
 
 
         <section>
-            <h2 class="no-caps">Gérer les emoticons</h2>
+            <h2 class="no-caps">Thank you</h2>
+
+            <h1>👏</h1>
+        </section>
+
+        <section>
+            <h2 class="no-caps">What about emoticons?</h2>
 
 
             <blockquote>:-)&nbsp;&nbsp;&nbsp;&nbsp;:D&nbsp;&nbsp;&nbsp;&nbsp;:-(&nbsp;&nbsp;&nbsp;&nbsp;
                 ^_^&nbsp;&nbsp;&nbsp;&nbsp;;-)&nbsp;&nbsp;&nbsp;&nbsp;<3
             </blockquote>
 
-            <p class="fragment">On va simplement mapper les emoticons vers leurs emoji respectifs avant la tokenisation !</p>
+            <p class="fragment">Just map them to their emoji representation before indexation!</p>
         </section>
 
 
 
         <section>
-            <h2 class="no-caps">Mapping emoticons</h2>
+            <h2 class="no-caps">Emoticon Mapping</h2>
 
             <pre><code class="hljs text" data-trim>
-:P=>😛
-8-)=>😎
-:s=>😒
-:|=>😐
-O:-D=>😇
-&lt;/3=>💔
-:'-|=>😢
+:P => 😛
+8-) => 😎
+:s => 😒
+:| => 😐
+O:-D => 😇
+&lt;/3 => 💔
+:'-| => 😢
 </code></pre>
         </section>
 
         <section>
-            <h2 class="no-caps">Un nouveau char_filter</h2>
+            <h2 class="no-caps">A simple char_filter</h2>
 
             <pre><code class="hljs java" data-trim>"char_filter": {
     "emoticons_char_filter": {
@@ -1150,12 +1154,12 @@ O:-D=>😇
     }
 },</code></pre>
 
-            <p>Fichier de mapping disponible : <a
+            <p>The file is here: <a
                     href="https://github.com/jolicode/emoji-search/blob/master/emoticons.txt">https://github.com/jolicode/emoji-search/blob/master/emoticons.txt</a></p>
         </section>
 
         <section>
-            <h2 class="no-caps">Un nouveau char_filter</h2>
+            <h2 class="no-caps">A simple char_filter</h2>
 
             <pre><code class="hljs java" data-trim>"analyzer": {
    "english_with_emoji": {
@@ -1171,37 +1175,34 @@ O:-D=>😇
 
 
         <section>
-            <h2 class="no-caps">Résultat</h2>
+            <h2 class="no-caps">Final result</h2>
 
-            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
+            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze
 {
+  "analyzer": "english_with_emoji",
   "text": "Hi mom :)"
 }</code></pre>
 
-            <p>hi mom 😃 face mouth open smile</p>
+            <p><em>hi</em> <em>mom</em> <em>😃</em> <em>face</em> <em>grinning face with big eyes</em> <em>mouth</em> <em>open</em> <em>smile</em></p>
         </section>
 
 
 
         <section>
-            <h2>Pour résumer</h2>
+            <h2>Conclusion</h2>
 
             <ul>
-                <li>Les emoji sont des lettres comme les autres 🔠</li>
-                <li>Leur recherche se base sur des synonymes 👥</li>
-                <li>Le CLDR produit ses annotations pour nous 📝</li>
-                <li>Écrire un plugin Elasticsearch c'est dur 👷</li>
-                <li>Venez m'aider 🙏</li>
+                <li>Emoji are just text 🔠</li>
+                <li>Default analyzers can't help 🐛</li>
+                <li>Searching is done via synonyms and annotations 👥</li>
+                <li>CLDR provide all the annotations 📝</li>
+                <li>Writing an Elasticsearch plugin is hard 👷</li>
             </ul>
         </section>
 
 
         <section>
-            <h2>À vos questions !</h2>
-
-            <p>Merci pour votre attention
-                🤘
-            </p>
+            <p>Thank you 🤘</p>
 
             <p>
                 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a>
@@ -1216,10 +1217,10 @@ O:-D=>😇
             <script type="text/template">
                 ## Ressources
 
-                - https://www.elastic.co/blog/writing-your-own-ingest-processor-for-elasticsearch
-                - http://david.pilato.fr/blog/2016/10/16/creating-a-plugin-for-elasticsearch-5-dot-0-using-maven-updated-for-ga/
+                - http://userguide.icu-project.org/boundaryanalysis#TOC-RBBI-Rules
+                - http://unicode.org/iso15924/iso15924-codes.html
                 - https://github.com/elastic/elasticsearch/tree/master/plugins/jvm-example
-                - https://twitter.com/damienalexandre 😂
+                - https://twitter.com/damienalexandre 👈
             </script>
         </section>
 
@@ -1227,7 +1228,7 @@ O:-D=>😇
 </div>
 
 <footer class="joli">
-    « The journey to get pizzas while looking for 🍕 » &dash; Elastic{Meetup} #34 - Lausanne &dash; <img
+    « The journey to get pizza while looking for 🍕 » &dash; Elastic{Meetup} #34 - Lausanne &dash; <img
         src="lib/font/logo-fond-noir.svg" style="height:1em; vertical-align: text-bottom;"/> 2018
 </footer>
 
