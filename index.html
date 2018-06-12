@@ -223,8 +223,6 @@
                 <img src="images/display-devices.png" alt="emoji display accross devices">
             </p>
 
-            <p>But remember - it's just text in the end.</p>
-
             <p><small><a href="https://unicode.org/emoji/charts/full-emoji-list.html">Full emoji list.</a></small></p>
         </section>
 
@@ -295,6 +293,12 @@
         </section>
 
         <section>
+            <h2 class="no-caps">And more to come...</h2>
+
+            <img src="images/unicode11.jpg" alt="Unicode 11 by Emojipedia" style="width: 60%" />
+        </section>
+
+        <section>
             <h2 class="no-caps">Flags</h2>
 
             <ul>
@@ -332,6 +336,12 @@
                 <li>Supported everywhere, very easy to type ⌨</li>
                 <li><a href="https://emojipedia.org/stats/">Emojipedia.org</a> has an average of 22 million page views per month 💥</li>
             </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">You can help Unicode</h2>
+
+            <img src="images/sponsor-emoji.jpg" alt="Sponsor Emoji" style="width: 60%" />
         </section>
 
         <section>
@@ -573,7 +583,7 @@ PUT demo
 "zwj_char_filter": {
   "type": "mapping",
   "mappings": [
-    "\\u200D=>"
+    "\\u200D=> "
   ]
 }
 </code></pre>
@@ -964,6 +974,24 @@ $E_Modifier ($Extend | $Format | $ZWJ)*;
 
 
         <section>
+            <h2 class="no-caps">Emoji.rbbi</h2>
+
+            <pre><code class="hljs json" data-trim>
+$E_Base ($Extend | $Format | $ZWJ)* {200};
+$E_Modifier ($Extend | $Format | $ZWJ)* {200};
+$Extended_Pict ($Extend | $Format | $ZWJ)* {200};
+            </code></pre>
+
+            <p>Based on the <a href="https://github.com/apache/lucene-solr/blob/4522e45bdadd4268a9270135130fc28a7f46c627/lucene/analysis/icu/src/data/uax29/Default.rbbi">Default from Lucene</a>.</p>
+
+            <p class="fragment"><strong>❌ Will fallback on the default for all others "scripts"! 😞</strong></p>
+        </section>
+
+        <section>
+            <h2 class="no-caps">We can do better! 💪</h2>
+        </section>
+
+        <section>
             <h2 class="no-caps">Our own plugin?!</h2>
 
             <h1>😮 😮 😮</h1>
@@ -1095,14 +1123,40 @@ defaultRules = defaultRules.replace(
   "text": "I live in 🇫🇷 and I'm 👩‍🚀"
 }</code></pre>
 
-            <p><em>i</em> <em>live</em> <em>in</em> <em>🇫🇷</em> <em>france</em> <em>and</em> <em>i'm</em> <em>👩‍🚀</em> <em>astronaut</em> <em>rocket</em> <em>woman</em></p>
+            <p><em>i</em> <em>live</em> <em>in</em> <em>🇫🇷</em> <em>france</em> <em>and</em> <em>i'm</em> <em><img
+                    src="images/woman-astronaut.png" style="font-size: inherit;
+    height: 3ex;
+    width: 3.1ex;
+    min-height: 20px;
+    min-width: 20px;
+    display: inline-block;
+    margin: -.2ex .15em .2ex;
+    line-height: normal;
+    vertical-align: middle;" alt="Woman astronaut emoji"></em> <em>astronaut</em> <em>rocket</em> <em>woman</em></p>
+
+
+            <p>Because 👩 and ZWJ and 🚀 is <img
+                    src="images/woman-astronaut.png" style="font-size: inherit;
+    height: 3ex;
+    width: 3.1ex;
+    min-height: 20px;
+    min-width: 20px;
+    display: inline-block;
+    margin: -.2ex .15em .2ex;
+    line-height: normal;
+    vertical-align: middle;" alt="Woman astronaut emoji"></p>
         </section>
 
 
         <section>
             <h2 class="no-caps">Thank you</h2>
 
-            <h1>👏</h1>
+
+            <div class="fragment">
+                <h2 class="no-caps">We can do better! 💪</h2>
+
+                <p>If we still have time 🕒</p>
+            </div>
         </section>
 
         <section>
@@ -1120,6 +1174,8 @@ defaultRules = defaultRules.replace(
 
         <section>
             <h2 class="no-caps">Emoticon Mapping</h2>
+
+            <h3><em>:p</em> looks like 😛</h3>
 
             <pre><code class="hljs text" data-trim>
 :P => 😛
@@ -1171,7 +1227,7 @@ O:-D => 😇
   "text": "Hi mom :)"
 }</code></pre>
 
-            <p><em>hi</em> <em>mom</em> <em>😃</em> <em>face</em> <em>grinning face with big eyes</em> <em>mouth</em> <em>open</em> <em>smile</em></p>
+            <p><em>hi</em> <em>mom</em> <em>😃</em> <em>face</em> <em>mouth</em> <em>open</em> <em>smile</em></p>
         </section>
 
 
@@ -1190,11 +1246,12 @@ O:-D => 😇
 
 
         <section>
-            <p>Thank you 🤘</p>
+            <h2>Thank a lot 🤘</h2>
 
             <p>
                 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a>
                 <br>
+
                 <a href="http://jolicode.com">
                     <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"/>
                 </a>
