@@ -56,6 +56,8 @@
     <div class="slides">
         <section>
             <h2>Indexer des Emoji <br>« 🍕 »<br> dans Elasticsearch pour trouver des pizzas !</h2>
+
+            <!-- TODO AJOUTER LOGO DE LA CONF -->
         </section>
 
         <section data-state="jolistate">
@@ -73,12 +75,12 @@
 
         <section data-state="jolistate">
             <p>
-                <a href="http://jolicode.com">
+                <a href="https://jolicode.com">
                     <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"/>
                 </a>
             </p>
 
-            <h2>Conseil, r&eacute;alisation, audit, expertise et formation</h2>
+            <h2>Développement Web<br>expertise<br>open-source</h2>
 
             <p class="footnote">
                 &hellip;Poney, Guinness et gif anim&eacute;.
@@ -200,15 +202,16 @@ TODO exemple emoticon cool
 
 
         <section>
-            <h2 class="no-caps">□ Support today □</h2>
+            <h2 class="no-caps">□ Support aujourd'hui □</h2>
 
             <ul>
-                <li>Apple iOS and OSX are leaders, it works in all apps</li>
-                <li>Android since 4.1</li>
-                <li>Microsoft Windows 10 (partial in 8 and 7)</li>
-                <li>Linux 🐧... <s>Build it yourself!</s> Ubuntu 18.04 native</li>
+                <li>Apple iOS et OSX</li>
+                <li>Android</li>
+                <li>Windows 10</li>
+                <li>Linux 🐧 Ubuntu 18.04</li>
                 <li><a href="http://caniemoji.com/">caniemoji.com</a></li>
-                <li>Common issues: black and white only ☃️, tofu □...</li>
+                <li>Problèmes : sans couleurs ⛇, tofu □, invalide �...</li>
+                <li class="fragment">Elasticsearch ?</li>
             </ul>
         </section>
 
@@ -217,16 +220,16 @@ TODO exemple emoticon cool
             <h2 class="no-caps">Les Emoji dans Unicode</h2>
 
             <ul>
-                <li>🍕 is code point <em>U+1F355</em>
-                <li>🏳 is code point <em>U+1F3F3</em>
-                <li>🌈 is code point <em>U+1F308</em>
+                <li>🍕 est <em>U+1F355</em>
+                <li>🌈 est <em>U+1F308</em>
+                <li>🐧 est <em>U+1F427</em>
             </ul>
         </section>
 
         <section>
             <h2 class="no-caps">Les Emoji dans Unicode</h2>
 
-            <p>Ces emoji se comportent et se manipulent comme du texte. C'est votre système d'exploitation qui est capable de les afficher en image.</p>
+            <p>Les emoji sont comme du texte. C'est votre système d'exploitation qui est capable de les afficher en image.</p>
 
             <p>
                 <img src="images/display-devices.png" alt="emoji display accross devices">
@@ -247,73 +250,8 @@ TODO exemple emoticon cool
             <img src="images/fail-samsung-hand.jpeg" alt="Emoji fail hands">
         </section>
 
-        <section>
-            <h2>There is more complexity</h2>
-        </section>
 
-        <section>
-            <h2 class="no-caps">Composition</h2>
-
-            <img src="images/raibowflag.png" alt="rainbow flag" style="position: absolute; right: 0; margin-top: 100px">
-            <ul>
-                <li>
-                    The following ZWJ Sequence display a rainbow flag!
-
-                    <ol>
-                        <li>🏳 <em>U+1F3F3</em></li>
-                        <li>ZWJ <em>U+200D</em></li>
-                        <li>🌈 <em>U+1F308</em></li>
-                    </ol>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Les modifiers</h2>
-
-            <ul>
-                <li>
-                    Modifiers Fitzpatrick
-
-                    <ul>
-                        <li>🤘 U+1F918 et 🏽 U+1F3FD
-                        <li>🤘🏽
-                        <li>Ne doit pas altérer la recherche
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Sélecteur de variation</h2>
-
-            <ul>
-                <li>
-                    Variations
-
-                    <ul>
-                        <li><em>U+FE0E</em> for text: 🏳️‍
-                        <li><em>U+FE0F</em> for image: 🏳
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Drapeaux</h2>
-
-            <ul>
-                <li>
-                    Each country has it's own based on ISO 3166-1:
-                    <ul>
-                        <li>🇨 <em>U+1F1E8</em> and 🇦 <em>U+1F1E6</em> display 🇨🇦
-                        <li>🇨🇭 🇫🇷 🇦🇪 🇸🇪
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
+       <!-- <section>
             <h2 class="no-caps">Les emoji et le texte</h2>
 
             <p>La spécification comporte maintenant :</p>
@@ -327,7 +265,7 @@ TODO exemple emoticon cool
                 <li>Des objets 💐 📋 🔦…
             </ul>
 
-        </section>
+        </section>-->
 
         <section>
             <h2 class="no-caps">L'utilisation des emoji</h2>
@@ -336,9 +274,8 @@ TODO exemple emoticon cool
             <ul>
                 <li>Word of the Year du Oxford English Dictionary 2015 : 😂
                 <li>World Emoji Day le 17 Juillet 🎉
-                <li>Emojimovie: Express Yourself, au cinéma en 2017 🎥
                 <li>Supporté partout ! Saisie super simple et claviers dédiés sur mobile ⌨</li>
-                <li>Emojipedia.org fait 14 millions de pages vues par mois</li>
+                <li>Emojipedia.org fait 45 millions de pages vues par mois</li>
             </ul>
         </section>
 
@@ -346,6 +283,7 @@ TODO exemple emoticon cool
             <h2>Oui, vos utilisateurs vont saisir 🍕 dans votre moteur de recherche !</h2>
         </section>
 
+        <!-- TODO REFAIRE DES CAPTURES -->
         <section>
             <img src="images/github.png" alt="Github">
         </section>
@@ -357,11 +295,11 @@ TODO exemple emoticon cool
         </section>
 
         <section>
-            <h2 class="no-caps">How to search like YELP</h2>
+            <h2 class="no-caps">Comment chercher comme Yelp</h2>
         </section>
 
         <section>
-            <h2 class="no-caps">Standards to the rescue</h2>
+            <h2 class="no-caps">C'est standard</h2>
 
             <ul>
                 <li>Unicode spécifie <a href="http://unicode.org/reports/tr51/#Searching">comment faire de la recherche</a> (TR51)
@@ -370,25 +308,48 @@ TODO exemple emoticon cool
         </section>
 
         <section>
-            <h2 class="no-caps">CLDR annotations of 🍕</h2>
+            <h2 class="no-caps">Annotations CLDR de 🍕</h2>
 
             <ul>
-                <li>English: pizza, cheese, slice</li>
-                <li>French: pizza, fromage, tranche</li>
+                <li>En Anglais : cheese, pizza, slice</li>
+                <li>En Français : fromage, part, pizza</li>
             </ul>
 
             <br>
             <br>
             <br>
-            <h4 class="no-caps">We have to index "pizza" <br>when the document contains a 🍕 emoji</h4>
-            <h4 class="no-caps fragment">Sounds like a job for synonyms!</h4>
+            <h4 class="no-caps">Nous devons indexer "pizza" <br>quand il y a un emoji 🍕</h4>
+            <h4 class="no-caps fragment">C'est le boulot des synonymes!</h4>
         </section>
 
         <section>
             <img style="width: 100%" src="images/ElasticsearchHorizontalTextWhite.svg" alt="Elasticsearch">
         </section>
 
+        <section>
+            <h2 class="no-caps">Dans Elasticsearch</h2>
 
+            <ul>
+                <li>Depuis 6.7 : Lucene 7.7.0 comprends les Emoji 🥰</li>
+                <li>Entre 6.4 et 6.7 : Plugin officiel analysis-icu</li>
+                <li>Avant 6.4 : 😵 <a href="https://github.com/jolicode/emoji-search/tree/master/esplugin">Plugin maison</a> 🔥</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Emoji simple</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🍩"],
+  "analyzer": "standard"
+}</code></pre>
+
+            <p class="fragment"><em>🍩</em><br>Nous allons pouvoir ajouter des synomymes</p>
+        </section>
+
+<!--
         <section>
             <h2 class="no-caps">Elasticsearch Analyzer</h2>
 
@@ -410,7 +371,111 @@ TODO exemple emoticon cool
 
             <p class="fragment">🏷 <strong>synonym</strong> token_filter can add Emoji annotations</p>
         </section>
+-->
 
+        <section>
+            <h2>C'est un peu plus complexe dans la vraie vie</h2>
+        </section>
+
+        <section data-background="images/fun_flags.jpeg">
+        </section>
+
+        <section>
+            <h2 class="no-caps">Composition</h2>
+
+            <img src="images/raibowflag.png" alt="rainbow flag" style="position: absolute; right: 0; margin-top: 100px">
+            <ul>
+                <li>
+                    Séquence ZWJ pour afficher un drapeau arc en ciel :
+
+                    <ol>
+                        <li>🏳 <em>U+1F3F3</em></li>
+                        <li>ZWJ <em>U+200D</em></li>
+                        <li>🌈 <em>U+1F308</em></li>
+                    </ol>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Drapeaux</h2>
+
+            <ul>
+                <li>
+                    249 combinaisons basées sur ISO 3166-1 alpha-2
+                    <ul>
+                        <li>🇨 <em>U+1F1E8</em> and 🇦 <em>U+1F1E6</em> affiche 🇨🇦
+                        <li>🇨🇭 🇨🇳 🇩🇪 🇪🇸 🇫🇷 🇬🇧 🇮🇹 🇯🇵 🇰🇷 🇷🇺 🇺🇸...
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Drapeaux</h2>
+
+            <ul>
+                <li>
+                    Des bonus
+                    <ul>
+                        <li>🇮🇨 IC Canary Islands
+                        <li>🇽🇰 XK Kosovo
+                        <li>🇺🇳 UN United Nations
+                        <li>🇪🇺 EU European Union
+                        <li>🇹🇼 TW Taiwan, caché en Chine</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Drapeaux subdivisions</h2>
+
+            <ul>
+                <li>
+                    ISO 3166-2 subdivisions administratives
+                    <ul>
+                        <li>🏴󠁧󠁢󠁳󠁣󠁴󠁿 GB-SCT Écosse
+                        <li>🏴󠁧󠁢󠁷󠁬󠁳󠁿 GB-WLS Wales
+                        <li>+ de 3000 possibilitées
+                        <li class="fragment">On l'aura notre emoji <a href="https://www.emoji.bzh/">BZH</a> !
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2 class="no-caps">Les modificateurs</h2>
+
+            <ul>
+                <li>
+                    Fitzpatrick
+
+                    <ul>
+                        <li>🤘 <em>U+1F918</em>
+                        <li>🤘🏽 <em>U+1F918</em> + <em>U+1F3FD</em>
+                        <li>Ne doit pas altérer la recherche
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Sélecteur de variation</h2>
+
+            <ul>
+                <li>
+                    Variations, exemple avec HEAVY BLACK HEART
+
+                    <ul>
+                        <li><em>❤ </em> U+2764 en texte</li>
+                        <li><em>❤️</em> U+2764 + U+FE0F en Emoji</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
 
         <section>
             <h2 class="no-caps">Ajout des synonymes</h2>
@@ -1205,8 +1270,11 @@ O:-D => 😇
     emojione.sprites = true;
     emojione.imagePathSVGSprites = 'lib/emojione.sprites.svg';
     delete emojione.jsEscapeMap["©"]; // Do not translate my Mojibake :D
+    delete emojione.jsEscapeMap["❤"]; // Do not translate my Mojibake :D
 
     Reveal.addEventListener('ready', function (event) {
+        return;
+        // TODO REMOVE
         var emoji_nodes = document.querySelectorAll('section p, section li, section h1, section h2, section h3, section h4, section h5, section h6, footer');
 
         for (var i = 0, len = emoji_nodes.length; i < len; i++) {
