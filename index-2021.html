@@ -31,9 +31,6 @@
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
 
-
-    <link rel="stylesheet" href="css/emojione.css">
-
     <!-- Printing and PDF exports -->
     <script>
         var link = document.createElement('link');
@@ -220,9 +217,9 @@ TODO exemple emoticon cool
             <h2 class="no-caps">Les Emoji dans Unicode</h2>
 
             <ul>
-                <li>🍕 est <em>U+1F355</em>
-                <li>🌈 est <em>U+1F308</em>
-                <li>🐧 est <em>U+1F427</em>
+                <li><em>U+1F355</em> est 🍕
+                <li><em>U+1F308</em> est 🌈
+                <li><em>U+1F427</em> est 🐧
             </ul>
         </section>
 
@@ -299,6 +296,14 @@ TODO exemple emoticon cool
         </section>
 
         <section>
+            PUT doc avec pizza
+        </section>
+        <section>
+            GET _search doc avec 🍕
+            => rien
+        </section>
+
+        <section>
             <h2 class="no-caps">C'est standard</h2>
 
             <ul>
@@ -342,36 +347,80 @@ TODO exemple emoticon cool
             <pre><code class="hljs json" data-trim>
 GET _analyze
 {
-  "text": ["🍩"],
+  "text": ["🍕"],
   "analyzer": "standard"
 }</code></pre>
 
-            <p class="fragment"><em>🍩</em><br>Nous allons pouvoir ajouter des synomymes</p>
+            <p class="fragment">Token <em>🍕</em></p>
         </section>
 
-<!--
         <section>
-            <h2 class="no-caps">Elasticsearch Analyzer</h2>
+            <h2 class="no-caps">Ajout des synonymes</h2>
 
-            <ol>
-                <li>char_filter : <em>Searching 🍕 in Elasticsearch</em>
-                <li>tokenizer : <em>Searching</em>
-                    <em>🍕</em>
-                    <em>in</em>
-                    <em>Elasticsearch</em>
-                <li>token_filter :
-                    <em>searching</em>
-                    <em>🍕</em>
-                    <em>pizza</em>
-                    <em>cheese</em>
-                    <em>slice</em>
-                    <em>in</em>
-                    <em>elasticsearch</em>
-            </ol>
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🍕"],
+  "tokenizer": "standard",
+  "filter": [
+    {
+      "type": "synonym",
+      "synonyms": [
+        "🍕 => 🍕, cheese, pizza, slice"
+      ]
+    }
+  ]
+}</code></pre>
 
-            <p class="fragment">🏷 <strong>synonym</strong> token_filter can add Emoji annotations</p>
+            <p class="fragment">Tokens <em>🍕</em> <em>cheese</em> <em>pizza</em> <em>slice</em></p>
         </section>
--->
+
+        <section>
+            <h2 class="no-caps">Recherche fonctionnelle</h2>
+
+            <p class="">Tokens <em>🍕</em> <em>cheese</em> <em>pizza</em> <em>slice</em> dans l'index</p>
+
+            <ul>
+                <li>Recherche avec "🍕" : match ✅</li>
+                <li>Recherche avec "pizza" : match ✅</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Liste de synonymes</h2>
+
+            <ul>
+                <li>Le CLDR fourni les annotations dans toutes les langues</li>
+                <li>Je fournis juste les fichiers de synonymes déjà prêt :</li>
+            </ul>
+
+            <p><a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a></p>
+        </section>
+
+        <section>
+            <pre>
+    🐻 => 🐻, bear, bear face, face
+    🐨 => 🐨, bear, koala
+    🐼 => 🐼, face, panda, panda face
+    🐾 => 🐾, feet, paw, paw prints, print
+    🦃 => 🦃, bird, turkey
+    🥵 => 🥵, feverish, heat stroke, hot, hot face, red-faced, sweating
+    🥶 => 🥶, blue-faced, cold, cold face, freezing, frostbite, icicles
+    🐣 => 🐣, baby, bird, chick, hatching, hatching chick
+    🐤 => 🐤, baby, baby chick, bird, chick
+    🐥 => 🐥, baby, bird, chick, front-facing baby chick
+    🤞 => 🤞, cross, crossed fingers, finger, hand, luck
+    🤟 => 🤟, hand, ILY, love-you gesture
+    🌾 => 🌾, ear, grain, rice, sheaf of rice
+    👱‍♀ => 👱‍♀, blond-haired woman, blonde, hair, woman, woman: blond hair
+    🧓 => 🧓, adult, gender-neutral, old, older person, unspecified gender
+    👴 => 👴, adult, man, old
+    🧝‍♀ => 🧝‍♀, magical, woman elf
+    🧞 => 🧞, djinn, genie
+    ...
+            </pre>
+        </section>
+
 
         <section>
             <h2>C'est un peu plus complexe dans la vraie vie</h2>
@@ -398,13 +447,37 @@ GET _analyze
         </section>
 
         <section>
+            <h2 class="no-caps">ZWJ dans ES</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🏳‍🌈"],
+  "tokenizer": "standard",
+  "filter": [
+    {
+      "type": "synonym",
+      "synonyms": [
+        "🏳‍🌈 => 🏳‍🌈, pride, rainbow, rainbow flag"
+      ]
+    }
+  ]
+}</code></pre>
+
+            <p class="fragment">Tokens <em>🏳‍🌈</em> <em>pride</em> <em>rainbow</em> <em>flag</em><br>
+            La jointure est bien connue d'Elasticsearch</p>
+        </section>
+
+        <section>
             <h2 class="no-caps">Drapeaux</h2>
 
             <ul>
                 <li>
                     249 combinaisons basées sur ISO 3166-1 alpha-2
                     <ul>
-                        <li>🇨 <em>U+1F1E8</em> and 🇦 <em>U+1F1E6</em> affiche 🇨🇦
+                        <li>Regional indicator symbol :
+                        <li>🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿
+                        <li>🇨 <em>U+1F1E8</em> et 🇦 <em>U+1F1E6</em> = 🇨🇦
                         <li>🇨🇭 🇨🇳 🇩🇪 🇪🇸 🇫🇷 🇬🇧 🇮🇹 🇯🇵 🇰🇷 🇷🇺 🇺🇸...
                     </ul>
                 </li>
@@ -417,7 +490,7 @@ GET _analyze
 
             <ul>
                 <li>
-                    Des bonus
+                    D'autres exemples :
                     <ul>
                         <li>🇮🇨 IC Canary Islands
                         <li>🇽🇰 XK Kosovo
@@ -430,6 +503,28 @@ GET _analyze
         </section>
 
         <section>
+            <h2 class="no-caps">Drapeaux dans ES</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🇪🇺"],
+  "tokenizer": "standard",
+  "filter": [
+    {
+      "type": "synonym",
+      "synonyms": [
+        "🇪🇺 => 🇪🇺, flag: European Union"
+      ]
+    }
+  ]
+}</code></pre>
+
+            <p class="fragment">Tokens <em>🇪🇺</em> <em>flag</em> <em>European</em> <em>Union</em><br>
+                Combinaisons lues par Elasticsearch</p>
+        </section>
+
+        <section>
             <h2 class="no-caps">Drapeaux subdivisions</h2>
 
             <ul>
@@ -439,12 +534,48 @@ GET _analyze
                         <li>🏴󠁧󠁢󠁳󠁣󠁴󠁿 GB-SCT Écosse
                         <li>🏴󠁧󠁢󠁷󠁬󠁳󠁿 GB-WLS Wales
                         <li>+ de 3000 possibilitées
+                        <li>Seulement 4 supportées actuellement
                         <li class="fragment">On l'aura notre emoji <a href="https://www.emoji.bzh/">BZH</a> !
                     </ul>
                 </li>
             </ul>
         </section>
 
+        <section>
+            <h2 class="no-caps">🏴󠁧󠁢󠁳󠁣󠁴󠁿 GB-SCT explosé</h2>
+            <ul style="font-size: 80%">
+                <li><em>U+1F3F4</em> 🏴
+                <li><em>U+E0067</em> TAG g
+                <li><em>U+E0062</em> TAG b
+                <li><em>U+E0073</em> TAG s
+                <li><em>U+E0063</em> TAG c
+                <li><em>U+E0074</em> TAG t
+                <li><em>U+E007F</em> CANCEL TAG
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Subdivisions dans ES</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🏴󠁧󠁢󠁳󠁣󠁴󠁿"],
+  "tokenizer": "standard",
+  "filter": [
+    {
+      "type": "synonym",
+      "synonyms": [
+        "🏴󠁧󠁢󠁳󠁣󠁴󠁿 => 🏴󠁧󠁢󠁳󠁣󠁴󠁿, flag, Scotland",
+        "🏴󠁦󠁲󠁢󠁲󠁥󠁿 => 🏴󠁦󠁲󠁢󠁲󠁥󠁿, flag, Bretagne, BZH"
+      ]
+    }
+  ]
+}</code></pre>
+
+            <p class="fragment">Tokens <em>🏴󠁧󠁢󠁳󠁣󠁴󠁿</em> <em>flag</em> <em>Scotland</em><br>
+                Très bon support</p>
+        </section>
 
         <section>
             <h2 class="no-caps">Les modificateurs</h2>
@@ -452,14 +583,34 @@ GET _analyze
             <ul>
                 <li>
                     Fitzpatrick
-
                     <ul>
                         <li>🤘 <em>U+1F918</em>
                         <li>🤘🏽 <em>U+1F918</em> + <em>U+1F3FD</em>
-                        <li>Ne doit pas altérer la recherche
                     </ul>
                 </li>
             </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Fitzpatrick dans ES</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🤘🏽"],
+  "tokenizer": "standard",
+  "filter": [
+    {
+      "type": "synonym",
+      "synonyms": [
+        "🤘🏽 => 🤘🏽, horns, medium skin tone"
+      ]
+    }
+  ]
+}</code></pre>
+
+            <p class="fragment">Tokens <em>🤘🏽</em> <em>horns</em> <em>medium</em> <em>skin</em> <em>tone</em><br>
+                Supporté aussi mais synonyme a affiner</p>
         </section>
 
         <section>
@@ -472,635 +623,67 @@ GET _analyze
                     <ul>
                         <li><em>❤ </em> U+2764 en texte</li>
                         <li><em>❤️</em> U+2764 + U+FE0F en Emoji</li>
+                        <li><em>🏳 U+FE0F ZWJ 🌈</em> !== <em>🏳 ZWJ 🌈</em></li>
                     </ul>
                 </li>
+
+
             </ul>
         </section>
 
         <section>
-            <h2 class="no-caps">Ajout des synonymes</h2>
+            <h2 class="no-caps">Variations ES</h2>
 
             <pre><code class="hljs json" data-trim>
-PUT demo
+GET _analyze
 {
-  "settings": {
-    "analysis": {
-      "filter": {
-        "english_emoji": {
-          "type": "synonym",
-          "synonyms": ["🍕 => 🍕, cheese, pizza, slice"]
-        },
-      }
-    }
-  }
-}</code></pre>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Ajout des synonymes</h2>
-
-            <ul>
-                <li>Le CLDR fourni les annotations dans toutes les langues</li>
-                <li>Je fournis juste les fichiers de synonymes déjà prêt :</li>
-            </ul>
-
-            <p><a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a></p>
-        </section>
-
-
-        <section>
-            <pre><code class="hljs json" data-trim>
-/_analyze?tokenizer=standard&text=I love &#x1F355;
-
-{
-  "tokens" : [
+  "text": ["🏳️‍🌈" , "❤️"],
+  "tokenizer": "standard",
+  "filter": [
     {
-      "token" : "I",
-      "position" : 0
-    },
-    {
-      "token" : "love",
-      "position" : 1
+      "type": "synonym",
+      "synonyms": [
+        "🏳‍🌈 => 🏳‍🌈, pride, rainbow, rainbow flag",
+        "❤ => ❤, heart, red heart"
+      ]
     }
   ]
-}
-            </code></pre>
-
-            <p class="fragment">Mes synonymes ne seront jamais ajoutés 😢</p>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Pas de token &#x1F355; ?</h2>
-
-            <ul>
-                <li>Le <strong>standard</strong> tokenizer est basé sur <a
-                        href="http://www.unicode.org/reports/tr29/tr29-17.html">"Unicode Text Segmentation"</a>
-
-                    version 17, publié en 2010, sans support des Emoji
-                <li>Un emoji est donc considéré comme un caractère à ignorer au même titre que la ponctuation</li>
-            </ul>
-
-            <p>😖</p>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Le whitespace tokenizer</h2>
-
-            <ul>
-                <li>
-                    ☑ Avantages
-                    <ul>
-                        <li>On conserve les Emoji ! 😎</li>
-                    </ul>
-                </li>
-                <li>
-                    ❌ Inconvénients
-                    <ul>
-                        <li>Plus bête que le standard tokenizer</li>
-                        <li>Laisse la ponctuation</li>
-                        <li>Ne met pas en lowercase</li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <pre><code class="hljs json" data-trim>
-/_analyze?tokenizer=whitespace&text=I love &#x1F355;
-
-{
-  "tokens" : [
-    {
-      "token" : "I"
-    },
-    {
-      "token" : "love"
-    },
-    {
-      "token" : "\uD83C\uDF55"
-    }
-  ]
-}
-            </code></pre>
-
-            <p class="fragment">(Vous avez remarqué les surrogate pair UTF-16 🤓 ?)</p>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">On ajoute des token_filter</h2>
-
-            <pre><code class="hljs json" data-trim>
-"punctuation_filter": {
-  "type": "pattern_replace",
-  "pattern": "\\p{Punct}",
-  "replace": ""
-},
-"remove_empty_filter": {
-  "type": "length",
-  "min": 1
 }</code></pre>
 
-            <p>Nécessaire pour enlever la ponctuation et les éventuels tokens vides.</p>
-
-            <p>!"#$%&'()*+,-./:;<=>?@[]^_`{|}~</p>
+            <p class="fragment">Tokens <em>🏳️‍🌈</em> <em>❤️</em><br>
+                Nos synonymes ne matchent pas !</p>
         </section>
 
         <section>
-            <h2 class="no-caps">Ne pas oublier les copains</h2>
+            <h2 class="no-caps">Variations ES</h2>
 
-            <ul style="font-size: 0.7em;">
-                <li style="padding: 2px 0"><em>\uFE0E</em> VARIATION SELECTOR-15 (force text representation)
-                <li style="padding: 2px 0"><em>\uFE0F</em> VARIATION SELECTOR-16 (force graphic representation)
-                <li style="padding: 2px 0"><em>\uD83C\uDFFB</em> EMOJI MODIFIER FITZPATRICK TYPE-1–2 (skin tone)
-                <li style="padding: 2px 0"><em>\uD83C\uDFFC</em> EMOJI MODIFIER FITZPATRICK TYPE-3 (skin tone)
-                <li style="padding: 2px 0"><em>\uD83C\uDFFD</em> EMOJI MODIFIER FITZPATRICK TYPE-4 (skin tone)
-                <li style="padding: 2px 0"><em>\uD83C\uDFFE</em> EMOJI MODIFIER FITZPATRICK TYPE-5 (skin tone)
-                <li style="padding: 2px 0"><em>\uD83C\uDFFF</em> EMOJI MODIFIER FITZPATRICK TYPE-6 (skin tone)
-                <li style="padding: 2px 0"><em>\u200D</em> ZERO WIDTH JOINER
-            </ul>
-        </section>
-
-
-        <section>
-            <h4 class="no-caps">Ajout des modifiers</h4>
+            <p>
+                On supprime les variateurs AVANT le filter de synonyme
+            </p>
 
             <pre><code class="hljs json" data-trim>
-"punctuation_filter": {
+{
   "type": "pattern_replace",
-  "pattern": "\\p{Punct}|\\uFE0E|\\uFE0F|\\uD83C\\uDFFB|\\uD83C\\uDFFC|\\uD83C\\uDFFD|\\uD83C\\uDFFE|\\uD83C\\uDFFF",
+  "pattern": "\\uFE0E|\\uFE0F",
   "replace": ""
 }
 </code></pre>
 
-            <h4 class="no-caps">Suppression du ZWJ via un char_filter</h4>
-
-            <pre><code class="hljs json" data-trim>
-"zwj_char_filter": {
-  "type": "mapping",
-  "mappings": [
-    "\\u200D=> "
-  ]
-}
-</code></pre>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">L'analyzer complet</h2>
-
-            <pre><code class="hljs json" data-trim>
-"analyzer": {
-  "english_with_emoji": {
-    "char_filter": "zwj_char_filter", // ZWJ
-    "tokenizer": "whitespace",        // Découpage
-    "filter": [
-      "lowercase",                    // Minuscules
-      "punctuation_filter",           // Modifiers...
-      "remove_empty_filter",          // Tokens vide
-      "english_emoji"                 // Synonymes !
-    ]
-  }
-}
-</code></pre>
+            <p class="">Tokens <em>🏳️‍🌈</em> <em>❤️</em> <em>pride</em> <em>rainbow</em> <em>heart</em>...</p>
         </section>
 
         <section>
-            <h2 class="no-caps">Et ça marche !</h2>
+            exemple complet
+        </section>
 
-            <pre><code class="hljs json" data-trim>
-GET /en-emoji/_analyze?analyzer=english_with_emoji
-{
-  "text": "A 🍩︎ please."
-}
-
-["a", "🍩",︎ "dessert", "donut", "sweet", "please"]
-</code></pre>
+        <section>
+            "🤌🏻",
+            L'importance des MAJ, emoji pas compris :(
         </section>
 
         <section>
             <h2 class="no-caps">Aller plus loin...</h2>
         </section>
-
-        <section>
-            <h2 class="no-caps">ICU, CLDR et Unicode avancent vite</h2>
-
-            <ul>
-                <li>ICU supporte les Emoji depuis quelques versions
-
-                    <ul>
-                        <li>ICU est disponible sous forme de plugin : <span class="emphasis">analysis-icu</span>
-                        <li>Ce plugin est basé sur la version <span class="emphasis">54</span> d'ICU
-                        <li>Dans Lucene, le ICU Tokenizer utilise la version <span class="emphasis">56.1</span>
-                        <li>Nous sommes actuellement à la version <span class="emphasis">58.1</span>
-                    </ul>
-                </li>
-                <li>Le ICUTokenizer de Lucene marque quand même les Emoji comme des "non mots"
-            </ul>
-
-            <p>🎉 <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a> 🎉</p>
-
-            <small>+1500 lines, ~90 languages, flags and composites support</small>
-        </section>
-
-        <section>
-            <pre><code class="hljs json" data-trim>🐻 => 🐻, bear, bear face, face
-🐨 => 🐨, bear, koala
-🐼 => 🐼, face, panda, panda face
-🐾 => 🐾, feet, paw, paw prints, print
-🦃 => 🦃, bird, turkey
-🐔 => 🐔, bird, chicken
-🐓 => 🐓, bird, rooster
-🐣 => 🐣, baby, bird, chick, hatching, hatching chick
-🐤 => 🐤, baby, baby chick, bird, chick
-🐥 => 🐥, baby, bird, chick, front-facing baby chick
-🌴 => 🌴, palm, palm tree, tree
-🌵 => 🌵, cactus, plant
-🌾 => 🌾, ear, grain, rice, sheaf of rice
-🌿 => 🌿, herb, leaf
-☘ => ☘, plant, shamrock
-🍀 => 🍀, 4, clover, four, four leaf clover, leaf
-🍁 => 🍁, falling, leaf, maple, maple leaf
-🍂 => 🍂, fallen leaf, falling, leaf
-🍃 => 🍃, blow, flutter, leaf, leaf fluttering in wind, wind
-🍇 => 🍇, fruit, grape, grapes</code></pre>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Thank you</h2>
-
-            <h1>👏</h1>
-        </section>
-
-        <section>
-            <h2 class="no-caps">La dernière version d'ICU</h2>
-
-            <ul>
-                <li>Avec ma version basée sur whitespace :
-                    <ul>
-                        <li>🏳 : Drapeau blanc</li>
-                        <li>🌈 : Arc-en-ciel</li>
-                    </ul>
-                </li>
-                <li>Avec une compréhension des séquences :
-                    <ul>
-                        <li><img src="images/raibowflag.png" alt="rainbow flag" style="height: 1.5em; display: inline-block; vertical-align: middle;"> : Drapeau Arc-en-ciel, LGBT, Gay pride</li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Plonger dans le <a
-                    href="https://svn.apache.org/repos/asf/lucene/dev/branches/lucene6835/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/ICUTokenizer.java">code</a></h2>
-
-            <p>Dans ICUTokenizer.java, status 0 = ignoré :</p>
-
-            <pre><code class="hljs java" data-trim>
-// find the next set of boundaries,
-// skipping over non-tokens (rule status 0)
-int end = breaker.next();
-while (start != BreakIterator.DONE
-                && breaker.getRuleStatus() == 0) {
-    start = end;
-    end = breaker.next();
-}
-</code></pre>
-
-            <p class="fragment">Lucene utilise SVN 😱</p>
-            <p class="fragment">Unicode aussi 😵</p>
-        </section>
-
-        <section>
-            <h2 class="no-caps">RBBI et RuleStatus</h2>
-
-            <pre><code class="hljs java" data-trim>!!chain;
-$CR                 = [\p{Word_Break = CR}];
-$LF                 = [\p{Word_Break = LF}];
-$Newline            = [\p{Word_Break = Newline} ];
-$Extend             = [\p{Word_Break = Extend}];
-$ZWJ                = [\p{Word_Break = ZWJ}];
-$Regional_Indicator = [\p{Word_Break = Regional_Indicator}];
-$Format             = [\p{Word_Break = Format}];
-$Katakana           = [\p{Word_Break = Katakana}];
-$Hebrew_Letter      = [\p{Word_Break = Hebrew_Letter}];
-$ALetter            = [\p{Word_Break = ALetter}];
-$Single_Quote       = [\p{Word_Break = Single_Quote}];
-$Double_Quote       = [\p{Word_Break = Double_Quote}];
-$MidNumLet          = [\p{Word_Break = MidNumLet}];
-$MidLetter          = [\p{Word_Break = MidLetter}];
-$MidNum             = [\p{Word_Break = MidNum}];
-$Numeric            = [\p{Word_Break = Numeric}];
-$ExtendNumLet       = [\p{Word_Break = ExtendNumLet}];
-$E_Base             = [\p{Word_Break = EB}\U0001F3C2\U0001F3C7\U0001F3CC\U0001F46A-\U0001F46D\U0001F46F\U0001F574\U0001F6CC];
-$E_Modifier         = [\p{Word_Break = EM}];
-$Extended_Pict      = [\U0001F774-\U0001F77F\u2700-\u2701\u2703-\u2704\u270E\u2710-\u2711\u2765-\u2767\U0001F030-\U0001F093\U0001F094-\U0001F09F\U0001F10D-\U0001F10F\U0001F12F\U0001F16C-\U0001F16F\U0001F1AD-\U0001F1E5\U0001F203-\U0001F20F\U0001F23C-\U0001F23F\U0001F249-\U0001F24F\U0001F252-\U0001F2FF\U0001F7D5-\U0001F7FF\U0001F000-\U0001F003\U0001F005-\U0001F02B\U0001F02C-\U0001F02F\U0001F322-\U0001F323\U0001F394-\U0001F395\U0001F398\U0001F39C-\U0001F39D\U0001F3F1-\U0001F3F2\U0001F3F6\U0001F4FE\U0001F53E-\U0001F548\U0001F54F\U0001F568-\U0001F56E\U0001F571-\U0001F572\U0001F57B-\U0001F586\U0001F588-\U0001F589\U0001F58E-\U0001F58F\U0001F591-\U0001F594\U0001F597-\U0001F5A3\U0001F5A6-\U0001F5A7\U0001F5A9-\U0001F5B0\U0001F5B3-\U0001F5BB\U0001F5BD-\U0001F5C1\U0001F5C5-\U0001F5D0\U0001F5D4-\U0001F5DB\U0001F5DF-\U0001F5E0\U0001F5E2\U0001F5E4-\U0001F5E7\U0001F5E9-\U0001F5EE\U0001F5F0-\U0001F5F2\U0001F5F4-\U0001F5F9\u2605\u2607-\u260D\u260F-\u2610\u2612\u2616-\u2617\u2619-\u261C\u261E-\u261F\u2621\u2624-\u2625\u2627-\u2629\u262B-\u262D\u2630-\u2637\u263B-\u2647\u2654-\u265F\u2661-\u2662\u2664\u2667\u2669-\u267A\u267C-\u267E\u2680-\u2691\u2695\u2698\u269A\u269D-\u269F\u26A2-\u26A9\u26AC-\u26AF\u26B2-\u26BC\u26BF-\u26C3\u26C6-\u26C7\u26C9-\u26CD\u26D0\u26D2\u26D5-\u26E8\u26EB-\u26EF\u26F6\u26FB-\u26FC\u26FE-\u26FF\u2388\U0001FA00-\U0001FFFD\U0001F0A0-\U0001F0AE\U0001F0B1-\U0001F0BF\U0001F0C1-\U0001F0CF\U0001F0D1-\U0001F0F5\U0001F0AF-\U0001F0B0\U0001F0C0\U0001F0D0\U0001F0F6-\U0001F0FF\U0001F80C-\U0001F80F\U0001F848-\U0001F84F\U0001F85A-\U0001F85F\U0001F888-\U0001F88F\U0001F8AE-\U0001F8FF\U0001F900-\U0001F90F\U0001F91F\U0001F928-\U0001F92F\U0001F931-\U0001F932\U0001F93F\U0001F94C-\U0001F94F\U0001F95F-\U0001F97F\U0001F992-\U0001F9BF\U0001F9C1-\U0001F9FF\U0001F6C6-\U0001F6CA\U0001F6E6-\U0001F6E8\U0001F6EA\U0001F6F1-\U0001F6F2\U0001F6D3-\U0001F6DF\U0001F6ED-\U0001F6EF\U0001F6F7-\U0001F6FF];
-$EBG                = [\p{Word_Break = EBG}];
-$EmojiNRK           = [[\p{Emoji}] - [\p{Word_Break = Regional_Indicator}\u002a\u00230-9©®™〰〽]];
-$Han                = [:Han:];
-$Hiragana           = [:Hiragana:];
-$Control        = [\p{Grapheme_Cluster_Break = Control}];
- $HangulSyllable = [\uac00-\ud7a3];
-$ComplexContext = [:LineBreak = Complex_Context:];
-$KanaKanji      = [$Han $Hiragana $Katakana];
-$dictionaryCJK  = [$KanaKanji $HangulSyllable];
-$dictionary     = [$ComplexContext $dictionaryCJK];
-$ALetterPlus  = [$ALetter-$dictionaryCJK [$ComplexContext-$Extend-$Control]];
-$KatakanaEx           = $Katakana           ($Extend |  $Format | $ZWJ)*;
-$Hebrew_LetterEx      = $Hebrew_Letter      ($Extend |  $Format | $ZWJ)*;
-$ALetterEx            = $ALetterPlus        ($Extend |  $Format | $ZWJ)*;
-$Single_QuoteEx       = $Single_Quote       ($Extend |  $Format | $ZWJ)*;
-$Double_QuoteEx       = $Double_Quote       ($Extend |  $Format | $ZWJ)*;
-$MidNumLetEx          = $MidNumLet          ($Extend |  $Format | $ZWJ)*;
-$MidLetterEx          = $MidLetter          ($Extend |  $Format | $ZWJ)*;
-$MidNumEx             = $MidNum             ($Extend |  $Format | $ZWJ)*;
-$NumericEx            = $Numeric            ($Extend |  $Format | $ZWJ)*;
-$ExtendNumLetEx       = $ExtendNumLet       ($Extend |  $Format | $ZWJ)*;
-$Regional_IndicatorEx = $Regional_Indicator ($Extend |  $Format | $ZWJ)*;
-$Ideographic    = [\p{Ideographic}];
-$HiraganaEx     = $Hiragana     ($Extend |  $Format | $ZWJ)*;
-$IdeographicEx  = $Ideographic  ($Extend |  $Format | $ZWJ)*;
-!!forward;
-$CR $LF;
-$ZWJ ($Extended_Pict | $EmojiNRK);
-[^$CR $LF $Newline]? ($Extend |  $Format | $ZWJ)+;
-$NumericEx {100};
-$ALetterEx {200};
-$HangulSyllable {200};
-$Hebrew_LetterEx{200};
-$KatakanaEx {400};
-       $HiraganaEx {400};
-       $IdeographicEx {400};
-    $E_Base ($Extend | $Format | $ZWJ)*;
-$E_Modifier ($Extend | $Format | $ZWJ)*;
-$Extended_Pict ($Extend | $Format | $ZWJ)*;
-($ALetterEx | $Hebrew_LetterEx)  ($ALetterEx | $Hebrew_LetterEx) {200};
-($ALetterEx | $Hebrew_LetterEx) ($MidLetterEx | $MidNumLetEx | $Single_QuoteEx) ($ALetterEx | $Hebrew_LetterEx) {200};
-$Hebrew_LetterEx $Single_QuoteEx {200};
-$Hebrew_LetterEx $Double_QuoteEx $Hebrew_LetterEx {200};
-$NumericEx $NumericEx {100};
-($ALetterEx | $Hebrew_LetterEx) $NumericEx {200};
-$NumericEx ($ALetterEx | $Hebrew_LetterEx) {200};
-$NumericEx ($MidNumEx | $MidNumLetEx | $Single_QuoteEx) $NumericEx {100};
-$KatakanaEx  $KatakanaEx {400};
-$ALetterEx       $ExtendNumLetEx {200};
-    $Hebrew_LetterEx $ExtendNumLetEx {200};
-    $NumericEx       $ExtendNumLetEx {100};
-    $KatakanaEx      $ExtendNumLetEx {400};
-    $ExtendNumLetEx  $ExtendNumLetEx {200};
-    $ExtendNumLetEx  $ALetterEx      {200};
-    $ExtendNumLetEx  $Hebrew_Letter  {200};
-    $ExtendNumLetEx  $NumericEx      {100};
-    $ExtendNumLetEx  $KatakanaEx     {400};
-    ($E_Base | $EBG) ($Format | $Extend | $ZWJ)* $E_Modifier;
-^$Regional_IndicatorEx $Regional_IndicatorEx;
-$HangulSyllable $HangulSyllable {200};
-$KanaKanji $KanaKanji {400};
- !!reverse;
-$BackHebrew_LetterEx      = ($Format | $Extend | $ZWJ)* $Hebrew_Letter;
-$BackALetterEx            = ($Format | $Extend | $ZWJ)* $ALetterPlus;
-$BackSingle_QuoteEx       = ($Format | $Extend | $ZWJ)* $Single_Quote;
-$BackDouble_QuoteEx       = ($Format | $Extend | $ZWJ)* $Double_Quote;
-$BackMidNumLetEx          = ($Format | $Extend | $ZWJ)* $MidNumLet;
-$BackNumericEx            = ($Format | $Extend | $ZWJ)* $Numeric;
-$BackMidNumEx             = ($Format | $Extend | $ZWJ)* $MidNum;
-$BackMidLetterEx          = ($Format | $Extend | $ZWJ)* $MidLetter;
-$BackKatakanaEx           = ($Format | $Extend | $ZWJ)* $Katakana;
-$BackHiraganaEx           = ($Format | $Extend | $ZWJ)* $Hiragana;
-$BackExtendNumLetEx       = ($Format | $Extend | $ZWJ)* $ExtendNumLet;
-$BackRegional_IndicatorEx = ($Format | $Extend | $ZWJ)* $Regional_Indicator;
-$LF $CR;
-($Extended_Pict | $EmojiNRK) $ZWJ;
-($Format | $Extend | $ZWJ)*  [^$CR $LF $Newline]?;
-($BackALetterEx | $BackHebrew_LetterEx) ($BackALetterEx | $BackHebrew_LetterEx);
-($BackALetterEx | $BackHebrew_LetterEx) ($BackMidLetterEx | $BackMidNumLetEx | $BackSingle_QuoteEx) ($BackALetterEx | $BackHebrew_LetterEx);
-$BackSingle_QuoteEx $BackHebrew_LetterEx;
-$BackHebrew_LetterEx $BackDouble_QuoteEx $BackHebrew_LetterEx;
-$BackNumericEx $BackNumericEx;
-$BackNumericEx ($BackALetterEx | $BackHebrew_LetterEx);
-($BackALetterEx | $BackHebrew_LetterEx) $BackNumericEx;
-$BackNumericEx ($BackMidNumEx | $BackMidNumLetEx | $BackSingle_QuoteEx) $BackNumericEx;
-$BackKatakanaEx $BackKatakanaEx;
-$BackExtendNumLetEx ($BackALetterEx | $BackHebrew_LetterEx | $BackNumericEx | $BackKatakanaEx | $BackExtendNumLetEx);
-($BackALetterEx | $BackHebrew_LetterEx | $BackNumericEx | $BackKatakanaEx) $BackExtendNumLetEx;
- $HangulSyllable $HangulSyllable;
-$KanaKanji $KanaKanji;
- $E_Modifier ($Format | $Extend | $ZWJ)* ($E_Base | $EBG);
-^$BackRegional_IndicatorEx / ($BackRegional_IndicatorEx $BackRegional_IndicatorEx)*         ($Format | $Extend | $ZWJ)* [[^$Regional_Indicator $Format $Extend $ZWJ] {eof}];
-^$BackRegional_IndicatorEx $BackRegional_IndicatorEx / ($BackRegional_IndicatorEx $BackRegional_IndicatorEx)*         ($Format | $Extend | $ZWJ)* [[^$Regional_Indicator $Format $Extend $ZWJ] {eof}];
-($Extended_Pict | $EmojiNRK) $ZWJ $BackRegional_IndicatorEx / ($BackRegional_IndicatorEx $BackRegional_IndicatorEx)*         ($Format | $Extend | $ZWJ)* [[^$Regional_Indicator $Format $Extend $ZWJ] {eof}];
-($Extended_Pict | $EmojiNRK) $ZWJ $BackRegional_IndicatorEx $BackRegional_IndicatorEx / ($BackRegional_IndicatorEx $BackRegional_IndicatorEx)*         ($Format | $Extend | $ZWJ)* [[^$Regional_Indicator $Format $Extend $ZWJ] {eof}];
-!!safe_reverse;
-($Extend | $Format | $ZWJ)+ .?;
-($MidLetter | $MidNumLet | $Single_Quote) ($BackALetterEx | $BackHebrew_LetterEx);
-$Double_Quote $BackHebrew_LetterEx;
-($MidNum | $MidNumLet | $Single_Quote) $BackNumericEx;
-$BackRegional_IndicatorEx*;
-$dictionary $dictionary;
-!!safe_forward;
-($Extend | $Format | $ZWJ)+ .?;
-($MidLetterEx | $MidNumLetEx | $Single_QuoteEx) ($ALetterEx | $Hebrew_LetterEx);
-$Double_QuoteEx $Hebrew_LetterEx;
-($MidNumEx | $MidNumLetEx | $Single_QuoteEx) $NumericEx;
-$Regional_IndicatorEx*;
-$dictionary $dictionary;
-</code></pre>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">RBBI et RuleStatus</h2>
-
-            <pre><code class="hljs java" data-trim>!!forward;
-$CR $LF;
-$ZWJ ($Extended_Pict | $EmojiNRK);
-$NumericEx {100};
-$ALetterEx {200};
-$E_Base ($Extend | $Format | $ZWJ)*;
-$E_Modifier ($Extend | $Format | $ZWJ)*;
-</code></pre>
-
-            <p>Pas de "status" pour les Emoji</p>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">ICUTokenizer rule_files</h2>
-
-            <ul>
-                <li>Fonctionnalité <a
-                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/5.0/analysis-icu-tokenizer.html">expérimentale
-                    dans icu_tokenizer</a></li>
-                <li>
-
-                    Possibilité de déclarer des fichiers de rules RBBI :
-
-                    <pre><code class="hljs java" data-trim>"tokenizer" : {
-    "icu_user_file" : {
-       "type" : "icu_tokenizer",
-       "rule_files" : "Latn:KeywordTokenizer.rbbi"
-    }
-}
-</code></pre>
-                </li>
-                <li class="fragment">❌ Ne remplis pas mon besoin car lié à une écriture, et écrase les régles pré-définis</li>
-            </ul>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Notre propre plugin !</h2>
-
-            <h1>😮 😮 😮</h1>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Spécifications</h2>
-
-            <ul>
-                <li>La dernière version d'ICU</li>
-                <li>Tokenizer compatible <span class="emphasis">icu_tokenizer</span></li>
-                <li>Marquer les emoji avec le status {200}</li>
-                <li>Éventuellement embarquer les synonymes</li>
-                <li>Simplifier le support des emoji 👌</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Écrire un plugin</h2>
-
-            <ul>
-                <li>Documentation <a
-                        href="https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugin-authors.html">"Allez voir le code ici"</a>
-                    <ul>
-                        <li>Pas d'explication sur les bonnes pratiques
-                        <li>Comment builder ? Distribuer ?
-                        <li>Avec Elasticsearch 5, une release par version d'Elasticsearch
-                    </ul>
-
-                </li>
-                <li>Un effort en cours pour aider à la réalisation de plugin Ingest</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Écrire un plugin</h2>
-
-            <ul>
-                <li>Build basé sur Gradle
-                <li>Il faut Gradle 2.13 uniquement !
-                <li>Plein de checks automatique
-                <li>Pas de documentation sur la configuration
-                <li>Zéro connaissance de l'écosystème Java 😯
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Quelques flags utiles</h2>
-
-            <ul>
-                <li><code>licenseHeaders.enabled</code>
-                <li><code>checkstyleTest.enabled</code>
-                <li><code>dependencyLicenses.enabled</code>
-                <li><code>thirdPartyAudit.enabled</code>
-                <li><code>test.enabled</code>
-            </ul>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Commandes Gradle</h2>
-
-            <ul>
-                <li><code>gradle idea</code> 💗 pour IntelliJ
-                <li><code>gradle tasks</code>
-                <li><code>gradle clean check</code> pour builder
-                <li><code>gradle clean check assemble</code> pour publier
-            </ul>
-        </section>
-
-        <section>
-            <h2 class="no-caps">Gradle fait tout</h2>
-
-            <p>Le livrable final est fait automatiquement :</p>
-
-            <pre><code class="hljs text" data-trim>
-analysis-emoji-5.0.0.zip
-└── elasticsearch
-    ├── analysis-emoji-5.0.0.jar
-    ├── icu4j-58.1.jar
-    ├── lucene-analyzers-icu-6.2.0.jar
-    └── plugin-descriptor.properties</code></pre>
-
-            <pre><code class="hljs text" data-trim>
-description=Add support for emoji in Elasticsearch
-version=5.0.0
-name=analysis-emoji
-classname=org.elasticsearch.plugin.analysis.emoji.EmojiPlugin
-java.version=1.8
-elasticsearch.version=5.0.0
-            </code></pre>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Plugin simple</h2>
-
-            <p>Juste un TokenizerFactory, des tests et une configuration custom pour ICUTokenizer :</p>
-
-                <pre><code class="hljs java" data-trim>defaultRules = defaultRules.replace(
-    "!!forward;",
-    "!!forward;\n$EmojiNRK {200};"
-);
-
-
-defaultRules = defaultRules.replace(
-    "| $ZWJ)*;",
-    "| $ZWJ)* {200};"
-);
-            </code></pre>
-        </section>
-
-
-        <section>
-            <h2 class="no-caps">Plein d'idées pour la suite</h2>
-
-            <ul>
-                <li>Le développement est ouvert sur Github</li>
-                <li><a href="https://github.com/jolicode/emoji-search">https://github.com/jolicode/emoji-search</a></li>
-                <li>Toute aide est la bienvenue 💘</li>
-                <li class="fragment">🆘 Vraiment, HELP ! 🆘</li>
-            </ul>
-        </section>
-
-
-
-        <section>
-            <h2 class="no-caps">Utilisation</h2>
-
-            <pre><code class="hljs java" data-trim>"analyzer": {
-   "english_with_emoji": {
-     "tokenizer": "emoji_tokenizer",
-     "filter": [
-       "lowercase",
-       "english_emoji"
-     ]
-   }
- }</code></pre>
-        </section>
-        <section>
-            <h2 class="no-caps">Résultat</h2>
-
-            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
-{
-  "text": "I live in 🇫🇷 and I'm 👩‍🚀"
-}</code></pre>
-
-            <p>i live in 🇫🇷 france and i'm 👩‍🚀 astronaut rocket woman</p>
-        </section>
-
 
         <section>
             <h2 class="no-caps">Gérer les emoticons</h2>
@@ -1181,8 +764,8 @@ O:-D => 😇
                 <li>Les emoji sont des lettres comme les autres 🔠</li>
                 <li>Leur recherche se base sur des synonymes 👥</li>
                 <li>Le CLDR produit ses annotations pour nous 📝</li>
-                <li>Écrire un plugin Elasticsearch c'est dur 👷</li>
-                <li>Venez m'aider 🙏</li>
+                <li>Un fichier de synonyme et vous êtes opé TODO</li>
+                <li>Supportez les emoji partout (sauf dans les mots de passe) TODO PIC</li>
             </ul>
         </section>
 
@@ -1207,9 +790,7 @@ O:-D => 😇
             <script type="text/template">
                 ## Ressources
 
-                - https://www.elastic.co/blog/writing-your-own-ingest-processor-for-elasticsearch
-                - http://david.pilato.fr/blog/2016/10/16/creating-a-plugin-for-elasticsearch-5-dot-0-using-maven-updated-for-ga/
-                - https://github.com/elastic/elasticsearch/tree/master/plugins/jvm-example
+                - https://emojipedia.org/
                 - https://twitter.com/damienalexandre 😂
             </script>
         </section>
@@ -1225,7 +806,6 @@ O:-D => 😇
 
 <script src="lib/js/head.min.js"></script>
 <script src="js/reveal.js"></script>
-<script src="js/emojione.js"></script>
 
 <script>
 
@@ -1263,26 +843,6 @@ O:-D => 😇
             {src: 'plugin/zoom-js/zoom.js', async: true},
             {src: 'plugin/notes/notes.js', async: true}
         ]
-    });
-
-    // Emoji One
-    emojione.imageType = 'svg';
-    emojione.sprites = true;
-    emojione.imagePathSVGSprites = 'lib/emojione.sprites.svg';
-    delete emojione.jsEscapeMap["©"]; // Do not translate my Mojibake :D
-    delete emojione.jsEscapeMap["❤"]; // Do not translate my Mojibake :D
-
-    Reveal.addEventListener('ready', function (event) {
-        return;
-        // TODO REMOVE
-        var emoji_nodes = document.querySelectorAll('section p, section li, section h1, section h2, section h3, section h4, section h5, section h6, footer');
-
-        for (var i = 0, len = emoji_nodes.length; i < len; i++) {
-            var element = emoji_nodes[i];
-
-            var input = element.innerHTML;
-            element.innerHTML = emojione.unicodeToImage(input);
-        }
     });
 </script>
 
