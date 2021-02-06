@@ -54,7 +54,6 @@
         <section>
             <h2>Indexer des Emoji <br>« 🍕 »<br> dans Elasticsearch pour trouver des pizzas !</h2>
 
-            <!-- TODO AJOUTER LOGO DE LA CONF -->
         </section>
 
         <section data-state="jolistate">
@@ -68,20 +67,6 @@
             </p>
 
             <p>PHP, Elasticsearch, Symfony, Emoji</p>
-        </section>
-
-        <section data-state="jolistate">
-            <p>
-                <a href="https://jolicode.com">
-                    <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"/>
-                </a>
-            </p>
-
-            <h2>Développement Web<br>expertise<br>open-source</h2>
-
-            <p class="footnote">
-                &hellip;Poney, Guinness et gif anim&eacute;.
-            </p>
         </section>
 
         <section>
@@ -120,9 +105,13 @@ given current trends. For this, use
             <h2 class="no-caps">Grosse créativité</h2>
 
             <pre><code class="hljs nohighlight" data-trim>
-TODO exemple emoticon cool
+(^_^) [o_o] (^.^)  (".") ($.$) {-_-}
 
-                one liner
+(╯°□°）╯︵ ┻━┻
+
+¯\_(ツ)_/¯
+
+( ͡° ͜ʖ ͡°)
             </code></pre>
         </section>
 
@@ -170,14 +159,14 @@ TODO exemple emoticon cool
         </section>
 
         <section>
-            <h2 class="no-caps">The birth of Emoji</h2>
+            <h2 class="no-caps">La naissance des Emoji</h2>
 
             <ul>
-                <li>855 emoji standardized in Unicode 6.0 in 2010
+                <li>855 emoji intégrés à Unicode 6.0 en 2010
                     <ul>
-                        <li>Existing Japanese pictograms were kept</li>
-                        <li>New ones were added</li>
-                        <li>Existing icons in Unicode had their Emoji representation</li>
+                        <li>Les pictogrammes Japonais</li>
+                        <li>Quelques nouveaux</li>
+                        <li>Certains icônes déjà dans Unicode inclus</li>
                     </ul>
                 </li>
             </ul>
@@ -191,9 +180,9 @@ TODO exemple emoticon cool
             <h2 class="no-caps">Adoption</h2>
 
             <ul>
-                <li>Early standard iPhone support in 2008, Japan only 🇯🇵
-                <li>Complete support in 2011
-                <li>Everyone followed, from Android to Windows</li>
+                <li>Ajouté dans l'iPhone en 2008, au Japon uniquement 🇯🇵
+                <li>Support complet en 2011
+                <li>Tous le monde à suivi, d'Android à Windows</li>
             </ul>
         </section>
 
@@ -214,7 +203,7 @@ TODO exemple emoticon cool
 
 
         <section>
-            <h2 class="no-caps">Les Emoji dans Unicode</h2>
+            <h2 class="no-caps">Les code points</h2>
 
             <ul>
                 <li><em>U+1F355</em> est 🍕
@@ -247,6 +236,9 @@ TODO exemple emoticon cool
             <img src="images/fail-samsung-hand.jpeg" alt="Emoji fail hands">
         </section>
 
+        <section>
+            <h3>Peu importe ce qui est affiché, c'est le code point qui porte le sens.</h3>
+        </section>
 
        <!-- <section>
             <h2 class="no-caps">Les emoji et le texte</h2>
@@ -280,15 +272,14 @@ TODO exemple emoticon cool
             <h2>Oui, vos utilisateurs vont saisir 🍕 dans votre moteur de recherche !</h2>
         </section>
 
-        <!-- TODO REFAIRE DES CAPTURES -->
         <section>
-            <img src="images/github.png" alt="Github">
+            <img src="images/github2.png" alt="Github">
         </section>
         <section>
-            <img src="images/twitter.png" alt="Twitter">
+            <img src="images/twitter2.png" alt="Twitter">
         </section>
         <section>
-            <img src="images/pizza-yelp-lausanne.png" alt="Yelp">
+            <img src="images/yelp2.png" alt="Yelp">
         </section>
 
         <section>
@@ -296,11 +287,22 @@ TODO exemple emoticon cool
         </section>
 
         <section>
-            PUT doc avec pizza
-        </section>
-        <section>
-            GET _search doc avec 🍕
-            => rien
+            <pre><code class="hljs json" data-trim>
+PUT meal/_doc/1
+{
+  "title": "pizza"
+}
+
+GET meal/_search
+{
+  "query": {
+    "match": {
+      "title": "🍕"
+    }
+  }
+}</code></pre>
+
+            <p class="fragment">Aucun résultat</p>
         </section>
 
         <section>
@@ -337,8 +339,31 @@ TODO exemple emoticon cool
             <ul>
                 <li>Depuis 6.7 : Lucene 7.7.0 comprends les Emoji 🥰</li>
                 <li>Entre 6.4 et 6.7 : Plugin officiel analysis-icu</li>
-                <li>Avant 6.4 : 😵 <a href="https://github.com/jolicode/emoji-search/tree/master/esplugin">Plugin maison</a> 🔥</li>
+                <li>Avant 6.4 : 😵 <a href="https://github.com/jolicode/emoji-search/tree/master/esplugin">Plugin maison</a> 🔥
+                et plein de hack </li>
             </ul>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Lucene 7.7 ❤️</h2>
+
+            <p>Extrait des tests de Lucene :</p>
+            <pre><code class="hljs java" data-trim>
+/** simple emoji */
+public void testEmoji() throws Exception {
+    BaseTokenStreamTestCase.assertAnalyzesTo(
+        a,
+        "💩 💩💩",
+        new String[] {"💩", "💩", "💩"},
+        new String[] {"&lt;EMOJI&gt;", "&lt;EMOJI&gt;", "&lt;EMOJI&gt;"}
+    );
+}</code></pre>
+
+            <small>
+                <a href="https://github.com/apache/lucene-solr/commit/283b19a8da6ab9e0b7e9a75b132d3067218d5502#diff-f8560c7a9c79fa371685c42a5bb486ebd0dbb56479e9af5849911dd95f4432db">
+                    Le commit qui a tout changé : "support Unicode UTS#51 v11.0 Emoji tokenization."
+                </a>
+            </small>
         </section>
 
         <section>
@@ -673,12 +698,104 @@ GET _analyze
         </section>
 
         <section>
-            exemple complet
+            <h2 class="no-caps">Les nouveaux emoji</h2>
+
+            <ul>
+                <li>Nouvelle version majeure d'Unicode tous les ans</li>
+                <li>Elasticsearch 7.10.2 = Lucene 8.7.0 = Unicode 11</li>
+                <li>Unicode 13 actuellement (Mars 2020)</li>
+            </ul>
         </section>
 
         <section>
-            "🤌🏻",
-            L'importance des MAJ, emoji pas compris :(
+            <h2 class="no-caps">Nouveaux emoji dans ES</h2>
+
+            <pre><code class="hljs json" data-trim>
+GET _analyze
+{
+  "text": ["🤌🏽", "🥷🏿"]
+}
+</code></pre>
+
+            <p class="">Tokens <em>🤌</em> <em>🏽</em> <em>🥷</em> <em>🏿</em> séparés !</p>
+
+            <p>
+                <img style="height: 150px" src="images/pinched.png" alt="Pinched">
+                <img style="height: 150px" src="images/ninja.png" alt="Ninja">
+            </p>
+
+            <p><small>Mais globalement c'est très fonctionnel.</small></p>
+        </section>
+
+        <section>
+            <h2 class="no-caps">Récapitulons</h2>
+
+            <ul>
+                <li>Installer un fichier de synonymes</li>
+                <li>Supprimer les sélecteurs de variation</li>
+                <li>Utiliser un token filter synonym</li>
+            </ul>
+        </section>
+
+        <section>
+            <code style="text-align: left;">
+$ wget https://github.com/jolicode/emoji-search/raw/master/synonyms/cldr-emoji-annotation-synonyms-en.txt<br><br>
+$ mv cldr-emoji-annotation-synonyms-en.txt /etc/elasticsearch/analysis/
+            </code>
+        </section>
+
+        <section>
+            <pre><code class="hljs json" data-trim style="font-size: 90%">PUT /tweets
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "english_emoji": {
+          "type": "synonym",
+          "synonyms_path": "analysis/cldr-emoji-annotation-synonyms-en.txt"
+        },
+        "emoji_variation_selector_filter": {
+          "type": "pattern_replace",
+          "pattern": "\\uFE0E|\\uFE0F",
+          "replace": ""
+        }
+      },
+      "analyzer": {
+        "english_with_emoji": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "emoji_variation_selector_filter",
+            "english_emoji"
+          ]
+        }
+      }
+    }
+  }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code class="hljs json" data-trim>GET tweets/_analyze
+{
+  "analyzer": "english_with_emoji",
+  "text": "🍕 🍍"
+}</code></pre>
+
+            <p>
+                <em>🍕</em>
+                <em>cheese</em>
+                <em>pizza</em>
+                <em>slice</em>
+                <em>🍍</em>
+                <em>fruit</em>
+                <em>pineapple</em>
+            </p>
+
+            <p class="fragment">
+                <img src="images/pineapple%20pizza.jpg" alt="Pizza">
+            </p>
         </section>
 
         <section>
@@ -687,7 +804,6 @@ GET _analyze
 
         <section>
             <h2 class="no-caps">Gérer les emoticons</h2>
-
 
             <blockquote>:-)&nbsp;&nbsp;&nbsp;&nbsp;:D&nbsp;&nbsp;&nbsp;&nbsp;:-(&nbsp;&nbsp;&nbsp;&nbsp;
                 ^_^&nbsp;&nbsp;&nbsp;&nbsp;;-)&nbsp;&nbsp;&nbsp;&nbsp;<3
@@ -701,7 +817,7 @@ GET _analyze
         <section>
             <h2 class="no-caps">Emoticon Mapping</h2>
 
-            <h3><em>:p</em> looks like 😛</h3>
+            <h3><em>:p</em> ressemble à 😛</h3>
 
             <pre><code class="hljs text" data-trim>
 :P => 😛
@@ -734,28 +850,35 @@ O:-D => 😇
             <pre><code class="hljs java" data-trim>"analyzer": {
    "english_with_emoji": {
      "char_filter": ["emoticons_char_filter"],
-     "tokenizer": "emoji_tokenizer",
+     "tokenizer": "standard",
      "filter": [
        "lowercase",
+       "emoji_variation_selector_filter",
        "english_emoji"
      ]
    }
  }</code></pre>
         </section>
 
-
         <section>
-            <h2 class="no-caps">Résultat</h2>
-
-            <pre><code class="hljs json" data-trim>GET /en-emoji/_analyze?analyzer=english_with_emoji
+            <pre><code class="hljs json" data-trim>GET tweets/_analyze
 {
-  "text": "Hi mom :)"
+  "analyzer": "english_with_emoji",
+  "text": "Sarcasm ;-)"
 }</code></pre>
 
-            <p>hi mom 😃 face mouth open smile</p>
+            <p>
+                <em>sarcasm</em>
+                <em>😉</em>
+                <em>face</em>
+                <em>wink</em>
+                <em>winking face</em>
+            </p>
+
+            <p class="fragment">
+                Des informations d'intention / émotion en plus.
+            </p>
         </section>
-
-
 
         <section>
             <h2>Pour résumer</h2>
@@ -764,26 +887,31 @@ O:-D => 😇
                 <li>Les emoji sont des lettres comme les autres 🔠</li>
                 <li>Leur recherche se base sur des synonymes 👥</li>
                 <li>Le CLDR produit ses annotations pour nous 📝</li>
-                <li>Un fichier de synonyme et vous êtes opé TODO</li>
-                <li>Supportez les emoji partout (sauf dans les mots de passe) TODO PIC</li>
+                <li>Un fichier de synonyme tout prêt disponible ✅</li>
+                <li>Il y a plein de combinaisons possibles ♾️</li>
+                <li>Supportez les emoji partout (sauf les mots de passe) 🔒</li>
             </ul>
         </section>
 
 
         <section>
-            <h2>À vos questions !</h2>
-
-            <p>Merci pour votre attention
-                🤘
+            <p>
+                Merci pour votre attention 🤘
             </p>
 
             <p>
-                <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a>
+                @damienalexandre
                 <br>
+                <a href="https://github.com/jolicode/emoji-search/">https://github.com/jolicode/emoji-search/</a>
+            </p>
+
+            <p>
                 <a href="http://jolicode.com">
-                    <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"/>
+                    <img src="./lib/font/logo-fond-noir.svg" alt="JoliCode"  style="height: 90px;"/>
                 </a>
             </p>
+
+            <h2 style="font-size: 40px;">Développement Web<br>expertise<br>open-source</h2>
         </section>
 
         <section data-markdown>
@@ -791,7 +919,9 @@ O:-D => 😇
                 ## Ressources
 
                 - https://emojipedia.org/
-                - https://twitter.com/damienalexandre 😂
+                - https://issues.apache.org/jira/browse/LUCENE-8366
+                - https://www.unicode.org/reports/tr51/tr51-18.html
+                - https://twitter.com/damienalexandre
             </script>
         </section>
 
